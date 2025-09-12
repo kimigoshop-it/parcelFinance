@@ -6,13 +6,14 @@ import routerPage from '@soybeanjs/router-page';
 import html from './html';
 import unplugin from './unplugin';
 import mock from './mock';
+import ReactivityTransform from '@vue-macros/reactivity-transform/vite'
 
 /**
  * vite插件
  * @param viteEnv - 环境变量配置
  */
 export function setupVitePlugins(viteEnv: ImportMetaEnv): (PluginOption | PluginOption[])[] {
-  const plugins = [vue(), vueJsx(), html(viteEnv), ...unplugin(viteEnv), unocss(), mock, routerPage()];
+  const plugins = [vue(), vueJsx(), html(viteEnv), ...unplugin(viteEnv), unocss(), mock, routerPage(), ReactivityTransform()];
 
   return plugins;
 }

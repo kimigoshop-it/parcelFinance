@@ -13,6 +13,7 @@
 		"noUnusedLocals": false,
 		"strictNullChecks": true,
 		"forceConsistentCasingInFileNames": true,
+		"preserveConstEnums": true,
 		"paths": {
 			"~/*": ["./*"],
 			"@/*": ["./src/*"]
@@ -22,7 +23,8 @@
 			"node",
 			"unplugin-icons/types/vue",
 			"naive-ui/volar",
-			"unplugin-vue-macros/macros-global"
+			"unplugin-vue-macros/macros-global",
+			"@vue-macros/reactivity-transform/macros-global" /* ... */
 		]
 	},
 	"exclude": ["node_modules", "dist"]

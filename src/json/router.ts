@@ -83,4 +83,28 @@ export default [
 			},
 		],
 	},
+	{
+		name: "settlement",
+		path: "/settlement",
+		component: "basic",
+		meta: {
+			title: "结算区域",
+			localIcon: "circum_crop",
+			order: 1,
+		},
+		children: [
+			{
+				name: "settlement_settlement_area",
+				path: "/settlement/settlement_area",
+				component: "self",
+				meta: {
+					title: "结算区域",
+					localIcon: "dot",
+					requiresAuth: true,
+					hide: false,
+					keepAlive: false,
+				},
+			},
+		],
+	},
 ];

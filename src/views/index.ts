@@ -12,5 +12,6 @@ export const views: Record<RouterPage.LastDegreeRouteKey, RouteComponent | (() =
   home_edit: () => import('./home/edit/index.vue'),
   home_message: () => import('./home/message/index.vue'),
   orderforgoods_detail: () => import('./orderforgoods/detail/index.vue'),
-  orderforgoods: () => import('./orderforgoods/index.vue')
+  orderforgoods: () => import('./orderforgoods/index.vue'),
+  settlement_settlement_area: () => import('./settlement/settlement_area/index.vue')
 };
