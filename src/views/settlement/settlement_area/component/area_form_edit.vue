@@ -6,12 +6,13 @@
 <script setup lang="tsx">
 import DialogForm from '@/components/dialog-form';
 import { FormItem } from '@/components/basic-form';
-import { onMounted, watch } from 'vue';
+import { onMounted, render, watch } from 'vue';
 import { ElButton, ElCheckbox, ElIcon, ElOption, ElPagination, ElSelect } from 'element-plus';
 import { Minus, Plus } from "@element-plus/icons-vue"
 import { queryPartitionDetailById, queryPartitionNoProvince, queryPartitionNoCity, queryProvinceConfigList, updatePartition } from '@/service/api/partition';
 import { CountryConfig, Partition, PartitionType } from '../model';
 import BusinessStore from '@/store/modules/business';
+import { VirtList } from 'vue-virt-list'
 import { range } from 'lodash';
 import { NButton } from 'naive-ui';
 
@@ -124,59 +125,82 @@ const formItems = $computed<FormItem[]>(() => {
 
   const availableCityProvinces = partition.getAvailableCityProvinces();
 
-  const chooseCities = partition.partitionCities.map((city, index) => {
-    const availableCities = partition.getAvailableCities(city.provinceId!);
-
-    return {
-      label: '选择城市',
-      name: 'chooseCity',
-      component: 'Customer',
-      render: () => {
-        return <div class="flex gap-2 items-center w-full">
-          <ElSelect class="flex-1" v-model={city.provinceId} onUpdate:modelValue={(value) => {
-            city.provinceId = value;
-          }}>
-            {availableCityProvinces.map((p) => {
-              return <ElOption value={p.provinceId!} label={p.provinceName!} />
-            })}
-          </ElSelect>
-          <ElSelect class="flex-1" v-model={city.cityId} onUpdate:modelValue={() => partition.editArea(index, {
-            province: null,
-            city: city
-          })} disabled={city.provinceId === null}>
-            {availableCities?.map((c) => {
-              return <div>
-                <ElOption value={c.cityId!} label={c.cityName!} disabled={partition.hasBeenSelected(c.provinceId!, c.cityId!)} />
-              </div>
-            })}
-          </ElSelect>
-          <ElButton style={{ width: "15px", height: "15px" }} type="primary" circle
-            onClick={() => {
-              partition.newArea();
-            }}
-          >
-            <ElIcon>
-              <Plus />
-            </ElIcon>
-          </ElButton>
-          {index !== 0 && <ElButton style={{ width: "15px", height: "15px" }} type="primary" circle
-            onClick={() => {
-              partition.removeArea(index);
-            }}
-          >
-            <ElIcon>
-              <Minus />
-            </ElIcon>
-          </ElButton>}
-          {index === 0 && <ElCheckbox
-            onChange={(value: boolean) => {
-              partition.handleSelectAll(value);
-            }}
-          >全部</ElCheckbox>}
-        </div>
-      }
+  const chooseCities = {
+    label: '选择城市',
+    name: 'chooseCity',
+    component: 'Customer',
+    render: () => {
+      return <VirtList
+        itemKey={'cityId'}
+        list={partition.partitionCities}
+      >
+        {{
+          default: ({ itemData, index }) => {
+            return item1(itemData, index);
+          }
+        }}
+      </VirtList>
     }
-  })
+  }
+
+  // const items = partition.partitionCities.map((city, index) => {
+  //   const availableCities = partition.getAvailableCities(city.provinceId!);
+
+  //   return {
+  //     label: '选择城市',
+  //     name: 'chooseCity',
+  //     component: 'Customer',
+  //     render: () => {
+  const item = (city: City, index: number) => {
+    console.log(city)
+    return <div>{city.cityName + index}</div>
+  }
+
+  const item1 = (city: City, index: number) => {
+    const availableCities = partition.getAvailableCities(city.provinceId!);
+    return <div class="flex gap-2 items-center w-full">
+      <ElSelect class="flex-1" v-model={city.provinceId} onUpdate:modelValue={(value) => {
+        city.provinceId = value;
+      }}>
+        {availableCityProvinces.map((p) => {
+          return <ElOption value={p.provinceId!} label={p.provinceName!} />
+        })}
+      </ElSelect>
+      <ElSelect class="flex-1" v-model={city.cityId} onUpdate:modelValue={() => partition.editArea(index, {
+        province: null,
+        city: city
+      })} disabled={city.provinceId === null}>
+        {availableCities?.map((c) => {
+          return <div>
+            <ElOption value={c.cityId!} label={c.cityName!} disabled={partition.hasBeenSelected(c.provinceId!, c.cityId!)} />
+          </div>
+        })}
+      </ElSelect>
+      <ElButton style={{ width: "15px", height: "15px" }} type="primary" circle
+        onClick={() => {
+          partition.newArea();
+        }}
+      >
+        <ElIcon>
+          <Plus />
+        </ElIcon>
+      </ElButton>
+      {index !== 0 && <ElButton style={{ width: "15px", height: "15px" }} type="primary" circle
+        onClick={() => {
+          partition.removeArea(index);
+        }}
+      >
+        <ElIcon>
+          <Minus />
+        </ElIcon>
+      </ElButton>}
+      {index === 0 && <ElCheckbox
+        onChange={(value: boolean) => {
+          partition.handleSelectAll(value);
+        }}
+      >全部</ElCheckbox>}
+    </div>
+  }
 
   items.push(partitionName);
   items.push(partitionType);
@@ -187,11 +211,7 @@ const formItems = $computed<FormItem[]>(() => {
     })
   }
 
-  if (partition.partitionType === PartitionType.CITY) {
-    chooseCities.forEach((item) => {
-      items.push(item);
-    })
-  }
+  items.push(chooseCities)
 
   return items;
 });

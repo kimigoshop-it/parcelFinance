@@ -263,7 +263,7 @@ export class Partition implements IPartition {
     }
 
     if (this.partitionType === PartitionType.CITY) {
-      this.partitionCities = this.partitionCitiesBackend;
+      this.partitionCities = _.cloneDeep(this.partitionCitiesBackend);
       this.selectedCityIds.clear();
       this.partitionCities.forEach((c) => {
         this.selectedCityIds.add(c.cityId!);
