@@ -1,5 +1,5 @@
 import { request, requestRaw } from '../request';
-import { Partition } from '@/views/settlement/settlement_area/model';
+import { Partition, PartitionDetail, UpdatePartitionDtoModel } from '@/views/settlement/settlement_area/model';
 
 /**
  * 查询省州配置列表
@@ -11,7 +11,8 @@ export const queryProvinceConfigList = (countryId: number) => {
     url: '/api/CountryConfig/QueryProvinceConfigList',
     method: 'POST',
     data: {
-      countryId
+      countryId,
+      pageSize: 10000
     }
   });
 };
@@ -48,7 +49,7 @@ export const queryPartitionList = (params: PartitionFilter) => {
  * @returns 分区
  */
 export const queryPartitionDetailById = (id: number) => {
-  return requestRaw<IPartition>({
+  return requestRaw<PartitionDetail>({
     url: '/api/Partition/QueryPartitionDetailById',
     method: 'GET',
     params: { id }
@@ -63,6 +64,20 @@ export const queryPartitionDetailById = (id: number) => {
 export const addPartition = (params: PartitionDto) => {
   return request<void>({
     url: '/api/Partition/AddPartition',
+    method: 'POST',
+    data: params,
+    showMsg: true
+  });
+};
+
+/**
+ * 更新分区
+ * @param params
+ * @returns
+ */
+export const updatePartition = (params: UpdatePartitionDtoModel) => {
+  return request<void>({
+    url: '/api/Partition/UpdatePartition',
     method: 'POST',
     data: params,
     showMsg: true
@@ -90,11 +105,24 @@ export const queryPartitionNoProvince = (countryConfigId: number) => {
  * @returns 区划列表
  */
 export const queryPartitionNoCity = (countryConfigId: number) => {
-  return request<IPartition[]>({
+  return requestRaw<(Province & { partitionCityViewModels: City[] })[]>({
     url: '/api/Partition/QueryPartitionNoCity',
     method: 'GET',
     params: {
       countryConfigId
     }
+  }).then((res) => {
+    return res.map((item) => {
+      return {
+        ...item,
+        partitionCities: item.partitionCityViewModels.map((c) => {
+          return {
+            ...c,
+            provinceId: item.provinceId,
+            provinceName: item.provinceName
+          };
+        })
+      };
+    });
   });
 };

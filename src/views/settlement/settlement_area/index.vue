@@ -23,7 +23,7 @@
     </n-card>
 
     <area-form-add @close="() => showForm.add = false" @success="handleSuccess('add')" :visible="showForm.add" />
-    <area-form-edit @close="() => showForm.edit = false" @success="handleSuccess('edit')" :visible="showForm.edit"
+    <area-form-edit @close="() => showForm.edit = false" @success="handleSuccess('edit')" v-if="showForm.edit"
       :partition="selectedPartition" :country="selectedCountry" />
   </div>
 </template>

@@ -118,13 +118,19 @@ interface ProvinceConfig {
 
 
 interface City {
+  /** 省州Id */
+  provinceId: number | null;
+
+  /** 省州名称 */
+  provinceName: string | null;
+
   /**
    * id
    */
-  cityId: number;
+  cityId: number | null;
 
   /**
    * 名称
    */
-  cityName: string;
+  cityName: string | null;
 }

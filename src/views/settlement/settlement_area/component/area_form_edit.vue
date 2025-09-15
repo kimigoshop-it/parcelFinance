@@ -1,24 +1,23 @@
 <template>
-  <div>
-    <DialogForm :columns="1" v-model="partition" :formItems="formItems" :visible="visible" @close="emit('close')"
-      @success="emit('success')"></DialogForm>
-  </div>
+  <DialogForm title="编辑区域" :columns="1" v-model="partition" :formItems="formItems" :visible="true"
+    @close="emit('close')" @success="emit('success')" @positive-click="handleEditPartition"></DialogForm>
 </template>
 
 <script setup lang="tsx">
 import DialogForm from '@/components/dialog-form';
 import { FormItem } from '@/components/basic-form';
 import { onMounted, watch } from 'vue';
-import { ElOption, ElSelect } from 'element-plus';
-import { queryPartitionDetailById, queryPartitionNoProvince, queryPartitionNoCity, queryProvinceConfigList } from '@/service/api/partition';
+import { ElButton, ElCheckbox, ElIcon, ElOption, ElPagination, ElSelect } from 'element-plus';
+import { Minus, Plus } from "@element-plus/icons-vue"
+import { queryPartitionDetailById, queryPartitionNoProvince, queryPartitionNoCity, queryProvinceConfigList, updatePartition } from '@/service/api/partition';
 import { CountryConfig, Partition, PartitionType } from '../model';
 import BusinessStore from '@/store/modules/business';
 import { range } from 'lodash';
+import { NButton } from 'naive-ui';
 
 const props = defineProps<{
   country: ICountryConfig,
   partition: IPartition,
-  visible: boolean
 }>();
 
 const emit = defineEmits<{
@@ -33,8 +32,6 @@ let country = countryStore.getCountry(props.country.id);
 
 // 这个对象每次弹窗刷新, 不在store取
 let partition = $ref<Partition>(new Partition(props.partition));
-
-let chooseProvinceCounts = $ref(1);
 
 const formItems = $computed<FormItem[]>(() => {
   const items: FormItem[] = [];
@@ -63,22 +60,21 @@ const formItems = $computed<FormItem[]>(() => {
           value: PartitionType.CITY,
         }
       ],
+      modelValue: partition.partitionType,
       onChange: (value: PartitionType) => {
         partition.choosePartitionType(value);
-        queryPartitionNoProvince(partition.countryConfigId!).then((res) => {
-          partition.refreshAvailableProvinces(res);
-        })
       }
     }
   }
 
-  const chooseProvince = Array.from({ length: chooseProvinceCounts }).map((_, index) => {
+  const chooseProvince = partition.partitionProvinces.map((pp, index) => {
+    const availableProvinces = partition.getAvailableProvinces();
     return {
       label: '选择区划',
       name: 'chooseProvince',
       component: 'Customer',
       render: () =>
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%" }} class="flex gap-2 items-center">
           <ElSelect props={{
             value: "provinceId",
             label: "provinceName",
@@ -88,45 +84,167 @@ const formItems = $computed<FormItem[]>(() => {
               const province = country!.getProvince(value);
               partition.editArea(index, {
                 province: {
-                  provinceId: province!.provinceId,
-                  provinceName: province!.provinceName,
+                  provinceId: province?.provinceId ?? value,
+                  provinceName: province?.provinceName ?? '',
                   partitionCities: []
                 },
                 city: null
               })
             }}>
-            {partition.getAvailableProvinces().map((p) => {
+            {availableProvinces.map((p) => {
+              return <ElOption disabled={partition.hasBeenSelected(p.provinceId!)} value={p.provinceId!} label={p.provinceName!} />
+            })}
+          </ElSelect>
+          <ElButton style={{ width: "15px", height: "15px" }} type="primary" circle
+            onClick={() => {
+              partition.newArea();
+            }}
+          >
+            <ElIcon>
+              <Plus />
+            </ElIcon>
+          </ElButton>
+          {index !== 0 && <ElButton style={{ width: "15px", height: "15px" }} type="primary" circle
+            onClick={() => {
+              partition.removeArea(index);
+            }}
+          >
+            <ElIcon>
+              <Minus />
+            </ElIcon>
+          </ElButton>}
+          {index === 0 && <ElCheckbox
+            onChange={(value: boolean) => {
+              partition.handleSelectAll(value);
+            }}
+          >全部</ElCheckbox>}
+        </div>
+    }
+  })
+
+  const availableCityProvinces = partition.getAvailableCityProvinces();
+
+  const chooseCities = partition.partitionCities.map((city, index) => {
+    const availableCities = partition.getAvailableCities(city.provinceId!);
+
+    return {
+      label: '选择城市',
+      name: 'chooseCity',
+      component: 'Customer',
+      render: () => {
+        return <div class="flex gap-2 items-center w-full">
+          <ElSelect class="flex-1" v-model={city.provinceId} onUpdate:modelValue={(value) => {
+            city.provinceId = value;
+          }}>
+            {availableCityProvinces.map((p) => {
               return <ElOption value={p.provinceId!} label={p.provinceName!} />
             })}
           </ElSelect>
+          <ElSelect class="flex-1" v-model={city.cityId} onUpdate:modelValue={() => partition.editArea(index, {
+            province: null,
+            city: city
+          })} disabled={city.provinceId === null}>
+            {availableCities?.map((c) => {
+              return <div>
+                <ElOption value={c.cityId!} label={c.cityName!} disabled={partition.hasBeenSelected(c.provinceId!, c.cityId!)} />
+              </div>
+            })}
+          </ElSelect>
+          <ElButton style={{ width: "15px", height: "15px" }} type="primary" circle
+            onClick={() => {
+              partition.newArea();
+            }}
+          >
+            <ElIcon>
+              <Plus />
+            </ElIcon>
+          </ElButton>
+          {index !== 0 && <ElButton style={{ width: "15px", height: "15px" }} type="primary" circle
+            onClick={() => {
+              partition.removeArea(index);
+            }}
+          >
+            <ElIcon>
+              <Minus />
+            </ElIcon>
+          </ElButton>}
+          {index === 0 && <ElCheckbox
+            onChange={(value: boolean) => {
+              partition.handleSelectAll(value);
+            }}
+          >全部</ElCheckbox>}
         </div>
+      }
     }
   })
 
   items.push(partitionName);
   items.push(partitionType);
-  items.push(...chooseProvince);
-  console.log(items)
+
+  if (partition.partitionType === PartitionType.PROVINCE) {
+    chooseProvince.forEach((item) => {
+      items.push(item);
+    })
+  }
+
+  if (partition.partitionType === PartitionType.CITY) {
+    chooseCities.forEach((item) => {
+      items.push(item);
+    })
+  }
 
   return items;
 });
 
-watch(() => props.partition.id, (newVal) => {
+// 提交表单
+function handleEditPartition() {
+  const model = partition.toUpdatePartitionDtoModel();
+  updatePartition(model).then(() => {
+    emit('success');
+  })
+}
+
+const initPartition = () => {
+  const partitionId = props.partition.id;
   partition = new Partition(props.partition);
-  if (newVal) {
-    queryPartitionDetailById(newVal).then((res) => {
-      if (res.provinceViewModelList) {
-        chooseProvinceCounts = res.provinceViewModelList.length;
+  if (partitionId) {
+    queryPartitionDetailById(partitionId).then((res) => {
+      if (res.partitionType === PartitionType.PROVINCE) {
+        partition.partitionProvincesBackend = (res.provinceViewModelList ?? []).map((item) => {
+          const province = country!.getProvince(item.provinceId)
+          return {
+            provinceId: item.provinceId,
+            provinceName: province!.provinceName!,
+            partitionCities: []
+          }
+        })
       }
+
+      if (res.partitionType === PartitionType.CITY) {
+        partition.partitionCitiesBackend = (res.provinceViewModelList ?? []).map((item) => {
+          return item.partitionCities.map((ct) => {
+            const province = country!.getProvince(item.provinceId)
+            return {
+              provinceId: item.provinceId,
+              provinceName: province!.provinceName!,
+              cityId: ct.cityId,
+              cityName: ct.cityName
+            }
+          })
+        }).flat();
+      }
+
+      partition.choosePartitionType(res.partitionType);
     })
   }
-})
+}
 
-watch(() => props.country.id, (newVal) => {
+onMounted(() => {
   if (!country) {
     country = new CountryConfig(props.country);
+    countryStore.setCountry(country);
     // 查询country province信息
-    queryProvinceConfigList(newVal).then((res) => {
+    queryProvinceConfigList(props.country.id).then((res) => {
       res.data.forEach((item) => {
         country!.addProvince({
           provinceId: item.id,
@@ -135,8 +253,10 @@ watch(() => props.country.id, (newVal) => {
         });
       })
     })
-    countryStore.setCountry(country);
   }
+
+
+  initPartition();
 })
 </script>
 
