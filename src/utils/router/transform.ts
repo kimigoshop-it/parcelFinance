@@ -72,13 +72,7 @@ export function transformAuthRouteToVueRoute(item: AuthRoute.Route) {
 
     // 捕获无效路由的需特殊处理
     if (item.name === 'not-found') {
-      itemRoute.children = [
-        {
-          path: '',
-          name: item.name,
-          component: getViewComponent('not-found')
-        }
-      ];
+     
     } else {
       const parentPath = `${itemRoute.path}-parent` as AuthRouteUtils.SingleRouteKey;
 

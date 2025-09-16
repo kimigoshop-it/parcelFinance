@@ -58,8 +58,8 @@ export default [
     },
     children: [
       {
-        name: 'orderforgoods',
-        path: '/orderforgoods',
+        name: 'orderforgoods_orderforgoods',
+        path: '/orderforgoods/orderforgoods',
         component: 'self',
         meta: {
           title: '小包订单',

@@ -4,14 +4,14 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { businessStore } from '@/store/modules';
+import { useBusinessStore } from '@/store/modules';
 
 const props = defineProps<{
   value: string;
   options: any[];
 }>();
 
-const partitionStore = businessStore.partition;
+const partitionStore = useBusinessStore().partition;
 
 onMounted(() => {
   partitionStore.init();
