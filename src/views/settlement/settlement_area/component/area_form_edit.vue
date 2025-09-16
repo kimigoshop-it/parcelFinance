@@ -41,9 +41,13 @@ const formItems = $computed<FormItem[]>(() => {
     label: '区域名称',
     name: 'partitionName',
     component: 'Input',
-    attrs: {
-      modelValue: partition.partitionName,
-    }
+    rules: [
+      {
+        required: true,
+        message: '请输入区域名称',
+        trigger: 'blur'
+      }
+    ]
   }
 
   const partitionType = {
@@ -65,7 +69,14 @@ const formItems = $computed<FormItem[]>(() => {
       onChange: (value: PartitionType) => {
         partition.choosePartitionType(value);
       }
-    }
+    },
+    rules: [
+      {
+        required: true,
+        message: '请选择区划维度',
+        trigger: 'blur'
+      }
+    ]
   }
 
   const chooseProvince = partition.partitionProvinces.map((pp, index) => {
@@ -119,7 +130,14 @@ const formItems = $computed<FormItem[]>(() => {
               partition.handleSelectAll(value);
             }}
           >全部</ElCheckbox>}
-        </div>
+        </div>,
+      rules: [
+        {
+          required: true,
+          message: '请选择区划',
+          trigger: 'blur'
+        }
+      ]
     }
   })
 
@@ -133,37 +151,25 @@ const formItems = $computed<FormItem[]>(() => {
       return <VirtList
         itemKey={'cityId'}
         list={partition.partitionCities}
+        minSize={10}
       >
         {{
           default: ({ itemData, index }) => {
-            return item1(itemData, index);
+            return item(itemData, index);
           }
         }}
       </VirtList>
     }
   }
 
-  // const items = partition.partitionCities.map((city, index) => {
-  //   const availableCities = partition.getAvailableCities(city.provinceId!);
-
-  //   return {
-  //     label: '选择城市',
-  //     name: 'chooseCity',
-  //     component: 'Customer',
-  //     render: () => {
   const item = (city: City, index: number) => {
-    console.log(city)
-    return <div>{city.cityName + index}</div>
-  }
-
-  const item1 = (city: City, index: number) => {
     const availableCities = partition.getAvailableCities(city.provinceId!);
-    return <div class="flex gap-2 items-center w-full">
+    return <div class="flex gap-2 items-center w-full py-2.5">
       <ElSelect class="flex-1" v-model={city.provinceId} onUpdate:modelValue={(value) => {
         city.provinceId = value;
       }}>
         {availableCityProvinces.map((p) => {
-          return <ElOption value={p.provinceId!} label={p.provinceName!} />
+          return <ElOption value={p.provinceId!} label={p.provinceName ?? ""} />
         })}
       </ElSelect>
       <ElSelect class="flex-1" v-model={city.cityId} onUpdate:modelValue={() => partition.editArea(index, {
@@ -211,7 +217,9 @@ const formItems = $computed<FormItem[]>(() => {
     })
   }
 
-  items.push(chooseCities)
+  if (partition.partitionType === PartitionType.CITY) {
+    items.push(chooseCities);
+  }
 
   return items;
 });
@@ -272,11 +280,11 @@ onMounted(() => {
           partitionCities: []
         });
       })
+      initPartition();
     })
+  } else {
+    initPartition();
   }
-
-
-  initPartition();
 })
 </script>
 

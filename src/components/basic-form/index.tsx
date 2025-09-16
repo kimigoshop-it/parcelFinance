@@ -8,7 +8,8 @@ import {
   ElRadio,
   ElSwitch,
   ElRow,
-  ElCol
+  ElCol,
+	FormItemRule
 } from 'element-plus';
 import { defineComponent, PropType } from 'vue';
 
@@ -30,6 +31,7 @@ export type FormItem = {
   render?: () => JSX.Element;
   colSpan?: number;
   placeholder?: string;
+  rules?: FormItemRule[];
 };
 
 function getComponent(type: ComponentType) {
@@ -111,7 +113,7 @@ export default defineComponent({
                 const Comp = getComponent(item.component);
                 return (
                   <ElCol span={item.colSpan ?? span}>
-                    <ElFormItem label={props.showLabel ? item.label : ''}>
+                    <ElFormItem label={props.showLabel ? item.label : ''} rules={item.rules} prop={item.name}>
                       {item.component === 'Customer' ? (
                         item.render!()
                       ) : (

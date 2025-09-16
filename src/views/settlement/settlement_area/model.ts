@@ -374,10 +374,10 @@ export class Partition implements IPartition {
     let ids: number[] = [];
 
     if (this.partitionType === PartitionType.PROVINCE) {
-      ids = this.partitionProvinces.map((p) => p.provinceId!);
+      ids = this.partitionProvinces.filter((p) => p?.provinceId).map((p) => p.provinceId!);
     }
     if (this.partitionType === PartitionType.CITY) {
-      ids = this.partitionCities.map((c) => c.cityId!);
+      ids = this.partitionCities.filter((c) => c?.cityId).map((c) => c.cityId!);
     }
 
     return {

@@ -46,7 +46,7 @@ export default defineComponent({
       default: '500px'
     }
   },
-  emits: ['update:modelValue'],
+  emits: ['onUpdate:modelValue'],
   slots: ['header', 'footer'],
   setup(props, { emit, slots }) {
     return () => (
@@ -65,14 +65,14 @@ export default defineComponent({
         }}
       >
         {slots?.header?.()}
-        <NScrollbar style={{ maxHeight: props.maxHeight, padding: '0 10px' }}>
+        <div style={{ maxHeight: props.maxHeight, padding: '0 10px', overflow: 'auto' }}>
           <BasicForm
             formItems={props.formItems}
             columns={props.columns}
             modelValue={props.modelValue}
-            onUpdate:modelValue={(value) => emit('update:modelValue', value)}
+            onUpdate:modelValue={(value) => emit('onUpdate:modelValue', value)}
           />
-        </NScrollbar>
+        </div>
         {slots.footer?.()}
       </NModal>
     );

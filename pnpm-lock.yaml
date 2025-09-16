@@ -82,6 +82,9 @@ dependencies:
   vue-router:
     specifier: ^4.1.6
     version: 4.1.6(vue@3.2.45)
+  vue-virt-list:
+    specifier: ^1.6.1
+    version: 1.6.1(vue@3.2.45)
 
 devDependencies:
   '@iconify/json':
@@ -4787,6 +4790,21 @@ packages:
     dependencies:
       vue: 3.2.45
 
+  /vue-demi@0.14.10(vue@3.2.45):
+    resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
+    engines: {node: '>=12'}
+    hasBin: true
+    requiresBuild: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.2.45
+    dev: false
+
   /vue-i18n@9.2.2(vue@3.2.45):
     resolution: {integrity: sha512-yswpwtj89rTBhegUAv9Mu37LNznyu3NpyLQmozF3i1hYOhwpG8RjcjIFIIfnu+2MDZJGSZPXaKWvnQA71Yv9TQ==}
     engines: {node: '>= 14'}
@@ -4826,6 +4844,19 @@ packages:
       '@volar/vue-typescript': 1.0.11
       typescript: 4.9.3
     dev: true
+
+  /vue-virt-list@1.6.1(vue@3.2.45):
+    resolution: {integrity: sha512-vkVIITKrfulNk8/Ve8hy2GJSNdD5GMG2ArUbu9PyMA5Hi98acOKla9tgtT/zs0VheDh1G7rSUspBiGuU8O7I/w==}
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^2.0.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+    dependencies:
+      vue: 3.2.45
+      vue-demi: 0.14.10(vue@3.2.45)
+    dev: false
 
   /vue@3.2.45:
     resolution: {integrity: sha512-9Nx/Mg2b2xWlXykmCwiTUCWHbWIj53bnkizBxKai1g61f2Xit700A1ljowpTIM11e3uipOeiPcSqnmBg6gyiaA==}
