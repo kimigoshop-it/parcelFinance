@@ -1,5 +1,9 @@
 import { CountryStore } from './country';
+import { PartitionStore } from './partition';
 
-export default {
-  country: CountryStore()
-}
+export const businessStore = {
+  country: CountryStore(),
+  partition: PartitionStore()
+};
+
+export default businessStore;

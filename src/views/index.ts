@@ -13,5 +13,7 @@ export const views: Record<RouterPage.LastDegreeRouteKey, RouteComponent | (() =
   home_message: () => import('./home/message/index.vue'),
   orderforgoods_detail: () => import('./orderforgoods/detail/index.vue'),
   orderforgoods: () => import('./orderforgoods/index.vue'),
+  quotation_payable: () => import('./quotation/payable/index.vue'),
+  quotation_payable_price_config: () => import('./quotation/payable/price_config/index.vue'),
   settlement_settlement_area: () => import('./settlement/settlement_area/index.vue')
 };
