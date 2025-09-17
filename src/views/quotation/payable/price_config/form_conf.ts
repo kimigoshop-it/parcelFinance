@@ -1,20 +1,6 @@
 import { BillingMethod, BusinessNode, BusinessType, GoodType, LastMileService, PriceType } from '../model/price';
 
 export default {
-  customerOptions: [
-    {
-      label: '项目1',
-      value: 1
-    },
-    {
-      label: '项目2',
-      value: 2
-    },
-    {
-      label: '项目3',
-      value: 3
-    }
-  ],
   businessTypeOptions: [
     {
       label: '专线',
@@ -49,12 +35,6 @@ export default {
     {
       label: '清派一体',
       value: BusinessNode.CLEAN_DELIVERY
-    }
-  ],
-  currencyOptions: [
-    {
-      label: '人民币',
-      value: 1
     }
   ],
   goodTypeOptions: [

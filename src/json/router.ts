@@ -94,6 +94,16 @@ export default [
     },
     children: [
       {
+        name: 'quotation_payable',
+        path: '/quotation/payable',
+        component: 'self',
+        meta: {
+          title: '应付报价',
+          localIcon: 'dot',
+          requiresAuth: true
+        }
+      },
+      {
         name: 'quotation_payable_price_config',
         path: '/quotation/payable/price_config',
         component: 'self',
@@ -102,10 +112,7 @@ export default [
           localIcon: 'dot',
           requiresAuth: true,
           hide: false,
-          keepAlive: false,
-          query: {
-            action: 'add'
-          }
+          keepAlive: false
         }
       }
     ]

@@ -61,6 +61,11 @@ interface Price {
    * 价格关联分区
    */
   priceRelatePartitionDtoModels: PriceRelatePartition[];
+
+  /**
+   * 创建日期
+   */
+  createTime;
 }
 
 /**

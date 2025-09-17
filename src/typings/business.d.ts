@@ -19,3 +19,21 @@ declare namespace Auth {
     userRole: RoleType;
   }
 }
+
+declare type SystemDictionaryDetail = {
+  systemDictionaryId: number,
+  dictionaryTypeCode: string,
+  state: number,
+  dictionaryTag: string,
+  dictionaryTagValue: string,
+  remark: string,
+  id: number,
+  delFlag: number,
+  createTime: string,
+  systemUserId: number | null,
+  createTimeString: string | null,
+  updateTimeString: string | null,
+  updateTime: string,
+  createUser: string,
+  updateUser: string
+}

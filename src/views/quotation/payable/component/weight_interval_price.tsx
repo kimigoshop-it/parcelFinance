@@ -1,7 +1,8 @@
-import { defineComponent, PropType, watch } from 'vue';
-import { NButton, NFormItem, NIcon, NInput } from 'naive-ui';
+import { defineComponent, PropType, ref, watch } from 'vue';
+import { NButton, NFormItem, NIcon, NInputNumber } from 'naive-ui';
 import { Plus } from '@element-plus/icons-vue';
 import { Minus } from '@element-plus/icons-vue';
+import { positiveNumberRule } from '../model/rules';
 
 export default defineComponent({
   name: 'WeightIntervalFixedPrice',
@@ -16,7 +17,7 @@ export default defineComponent({
     }
   },
   emits: ['update:modelValue'],
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     const partitions = $ref<PriceRelatePartition[]>(props.modelValue);
     if (partitions.length === 0) {
       partitions.push({} as any);
@@ -26,15 +27,76 @@ export default defineComponent({
       emit('update:modelValue', newVal);
     });
 
+    const formItemRef = ref<InstanceType<typeof NFormItem>[][]>([]);
+
+    expose({
+      validate: () => {
+        return formItemRef.value.flat(2).forEach((item) => {
+          return item.validate().catch((err) => {});
+        });
+      }
+    });
     return () => {
       return (
         <NFormItem label='重量区间固定价'>
           <div class='flex flex-wrap flex-col gap-1'>
             {partitions.map((item, index) => (
               <div class='inline-flex  gap-2 items-center'>
-                <NInput placeholder='请输入开始重量' v-model:value={item.beginWeight} />
-                <NInput placeholder='请输入结束重量' v-model:value={item.endWeight} />
-                <NInput placeholder='请输入价格' v-model:value={item.firstWeightPrice} />
+                <NFormItem
+                  ref={(el) => {
+                    if (!formItemRef.value[index]) formItemRef.value[index] = [];
+                    formItemRef.value[index][0] = el as any;
+                  }}
+                  rule={[positiveNumberRule(item.beginWeight)]}
+                >
+                  <NInputNumber
+                    showButton={false}
+                    clearable
+                    placeholder='请输入开始重量'
+                    v-model:value={item.beginWeight}
+                  />
+                </NFormItem>
+                <NFormItem
+                  ref={(el) => {
+                    if (!formItemRef.value[index]) formItemRef.value[index] = [];
+                    formItemRef.value[index][1] = el as any;
+                  }}
+                  rule={[
+                    positiveNumberRule(item.endWeight),
+                    {
+                      trigger: 'blur',
+                      validator: () => {
+                        return new Promise((resolve, reject) => {
+                          if (item.endWeight <= item.beginWeight) {
+                            reject('结束重量不能小于开始重量');
+                          }
+                          resolve();
+                        });
+                      }
+                    }
+                  ]}
+                >
+                  <NInputNumber
+                    showButton={false}
+                    clearable
+                    placeholder='请输入结束重量'
+                    v-model:value={item.endWeight}
+                  />
+                </NFormItem>
+                <NFormItem
+                  ref={(el) => {
+                    if (!formItemRef.value[index]) formItemRef.value[index] = [];
+                    formItemRef.value[index][2] = el as any;
+                  }}
+                  rule={[positiveNumberRule(item.firstWeightPrice)]}
+                >
+                  <NInputNumber
+                    showButton={false}
+                    clearable
+                    placeholder='请输入价格'
+                    v-model:value={item.firstWeightPrice}
+                  />
+                </NFormItem>
                 <NButton
                   type='primary'
                   size='small'

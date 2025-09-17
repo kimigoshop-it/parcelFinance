@@ -1,11 +1,12 @@
 <template>
-  <div class="content">
+  <div ref="root" class="content">
     <div class="deflut">
-      <BasicForm :showLabel="false" :columns="columns ?? 3" :formItems="formItems" v-model="model" :expand="isExpand" />
+      <BasicForm :showLabel="false" :columns="columns ?? 3" :formItems="formItems" v-model="model"
+      :expand="isExpand" />
     </div>
     <div class="buttons">
-      <n-button type="error" color="#FB4A4C">查询</n-button>
-      <n-button type="error" color="#FB4A4C" ghost>重置</n-button>
+      <n-button type="error" color="#FB4A4C" @click="handleSearch">查询</n-button>
+      <n-button type="error" color="#FB4A4C" @click="handleReset" ghost>重置</n-button>
       <n-button v-if="showExpandButton" @click="handleExpand" type="error" color="#FB4A4C">
         {{ isExpand ? '收起' : '展开' }}
       </n-button>
@@ -15,6 +16,9 @@
 
 <script setup lang="tsx">
 import BasicForm, { FormItem } from '@/components/basic-form';
+import { ref, onBeforeUnmount, onMounted, watch, computed } from 'vue';
+
+const root = ref<HTMLDivElement | null>(null);
 
 const props = defineProps<{
   formItems: FormItem[];
@@ -24,9 +28,14 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: "update:modelValue", value: Record<string, any>): void;
+  (e: "search", value: Record<string, any>): void;
+  (e: "reset"): void;
 }>();
 
-const model = $ref(props.modelValue);
+const model = computed({
+  get: () => props.modelValue,
+  set: (val) => emit("update:modelValue", val),
+})
 
 let isExpand = $ref(false);
 
@@ -37,6 +46,33 @@ const showExpandButton = $computed(() => {
 const handleExpand = () => {
   isExpand = !isExpand;
 };
+
+const handleSearch = () => {
+  emit('search', model);
+};
+
+const handleReset = () => {
+  emit('reset');
+};
+
+// const handleEnter = (e) => {
+//   const target = e.target as HTMLElement
+//   debugger
+  
+//   if (target.closest(".el-select")) {
+//     return
+//   }
+//   if (e.key === "Enter") {
+//     handleSearch()
+//   }
+// }
+
+// onMounted(() => {
+//   root.value?.addEventListener("keydown", handleEnter);
+// });
+// onBeforeUnmount(() => {
+//   root.value?.removeEventListener("keydown", handleEnter);
+// });
 </script>
 
 <style scoped lang="scss">

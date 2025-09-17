@@ -1,54 +1,93 @@
 <template>
-  <n-card :title="actionText + '应收报价'">
-    <n-form :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }">
+  <n-card>
+    <div class="flex justify-center py-10 items-center">
+      <div class="text-2xl font-bold">{{ actionText + '应收报价' }}</div>
+    </div>
+    <n-form ref="formRef" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }" :rules="rules">
       <div class="grid grid-cols-3 gap-4">
-        <n-form-item label-placement="left" label="所属项目">
-          <n-select placeholder="请选择所属项目" v-model:value="form.customerId" :options="FormConf.customerOptions" />
+        <n-form-item label-placement="left" label="所属项目" path="customerId">
+          <!-- <n-select placeholder="请选择所属项目" v-model:value="form.customerId" :options="FormConf.customerOptions" /> -->
+          <PartitionSelect v-model="form.customerId" />
         </n-form-item>
-        <n-form-item label-placement="left" label="业务模式">
-          <n-select placeholder="请选择业务模式" v-model:value="form.businessType" :options="FormConf.businessTypeOptions" />
+        <n-form-item label-placement="left" label="业务模式" path="businessType">
+          <n-select
+            placeholder="请选择业务模式"
+            v-model:value="form.businessType"
+            :options="FormConf.businessTypeOptions"
+          />
         </n-form-item>
-        <n-form-item label-placement="left" label="业务节点">
-          <n-select placeholder="请选择业务节点" v-model:value="form.businessNode" :options="FormConf.businessNodeOptions" />
+        <n-form-item label-placement="left" label="业务节点" path="businessNode">
+          <n-select
+            placeholder="请选择业务节点"
+            v-model:value="form.businessNode"
+            :options="FormConf.businessNodeOptions"
+          />
         </n-form-item>
-        <n-form-item label-placement="left" label="结算货币">
-          <n-select placeholder="请选择结算货币" v-model:value="form.currencyId" :options="FormConf.currencyOptions" />
+        <n-form-item label-placement="left" label="结算货币" path="currencyId">
+          <CurrencySelect v-model="form.currencyId" />
         </n-form-item>
-        <n-form-item label-placement="left" label="货物类型">
+        <n-form-item label-placement="left" label="货物类型" path="goodType">
           <n-select placeholder="请选择货物类型" v-model:value="form.goodType" :options="FormConf.goodTypeOptions" />
         </n-form-item>
-        <n-form-item label-placement="left" label="尾程服务">
-          <n-select placeholder="请选择尾程服务" v-model:value="form.lastMileService" :options="FormConf.lastMileServiceOptions" />
+        <n-form-item label-placement="left" label="尾程服务" path="lastMileService">
+          <n-select
+            placeholder="请选择尾程服务"
+            v-model:value="form.lastMileService"
+            :options="FormConf.lastMileServiceOptions"
+          />
         </n-form-item>
       </div>
 
       <div>
-        <n-form-item label-placement="left" label="计价方式">
-          <n-select placeholder="请选择计价方式" v-model:value="form.billingMethod" :options="FormConf.billingMethodOptions" />
+        <n-form-item label-placement="left" label="计价方式" path="billingMethod">
+          <n-select
+            placeholder="请选择计价方式"
+            v-model:value="form.billingMethod"
+            :options="FormConf.billingMethodOptions"
+          />
         </n-form-item>
-        <Billing :billingMethod="form.billingMethod" v-model="form.priceRelatePartitionDtoModels" @update:model-value="handleUpdateModelValue" />
+        <Billing
+          ref="billingRef"
+          :billingMethod="form.billingMethod"
+          :customerId="form.customerId"
+          v-model="form.priceRelatePartitionDtoModels"
+          @update:model-value="handleUpdateModelValue"
+        />
       </div>
 
       <div class="flex flex-center">
-        <n-button class="w-24" type="primary" @click="submit">保存</n-button>
+        <n-space>
+          <n-button class="w-24" type="primary" @click="submit">保存</n-button>
+          <n-button class="w-24" type="primary" @click="cancel" ghost>取消</n-button>
+        </n-space>
       </div>
     </n-form>
   </n-card>
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import FormConf from './form_conf';
 import Billing, { PricePartition } from '../component/billing';
+import PartitionSelect from '~/src/components/business/CustomerSelect.vue';
+import CurrencySelect from '@/components/business/CurrencySelect.vue';
+import { BillingMethod, PriceType } from '../model/price';
+import { ref } from 'vue';
+import { NForm } from 'naive-ui';
+import { addPrice } from '~/src/service/api';
 
 const route = useRoute();
+const router = useRouter();
+
 const action: 'edit' | 'add' = route.query.action as 'edit' | 'add';
 const actionText = $computed(() => {
   return action === 'edit' ? '编辑' : '新增';
 });
 
+const formRef = ref<InstanceType<typeof NForm> | undefined>(undefined);
 const form = $ref<Price>({
-  id: 0,
+  priceType: PriceType.PAYABLE,
+  customerId: null,
   name: '',
   billingMethod: null,
   priceRelatePartitionDtoModels: []
@@ -58,7 +97,35 @@ const handleUpdateModelValue = (newVal: PriceRelatePartition[]) => {
   console.log(newVal);
 };
 
+// 规则
+const rules = {
+  customerId: [{ required: true, message: '请选择所属项目' }],
+  businessType: [{ required: true, message: '请选择业务模式' }],
+  businessNode: [{ required: true, message: '请选择业务节点' }],
+  currencyId: [{ required: true, message: '请选择结算货币' }],
+  goodType: [{ required: true, message: '请选择货物类型' }],
+  lastMileService: [{ required: true, message: '请选择尾程服务' }],
+  billingMethod: [{ required: true, message: '请选择计价方式' }]
+};
+
+const billingRef = ref<InstanceType<typeof Billing> | undefined>(undefined);
+
+const validate = async () => {
+  await billingRef.value?.validate();
+  await formRef.value?.validate();
+  return true;
+};
+
 const submit = () => {
-  console.log(form);
+  validate().then(() => {
+    console.log(form);
+    addPrice(form).then((res) => {
+      console.log(res);
+    });
+  });
+};
+
+const cancel = () => {
+  router.back();
 };
 </script>

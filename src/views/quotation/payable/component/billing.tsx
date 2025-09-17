@@ -1,4 +1,4 @@
-import { defineComponent, PropType, watch } from 'vue';
+import { defineComponent, PropType, ref, watch } from 'vue';
 import { BillingMethod } from '../model/price';
 import FixedPrice from './fixed_price';
 import WeightIntervalPrice from './weight_interval_price';
@@ -28,10 +28,14 @@ export default defineComponent({
     modelValue: {
       type: Array as PropType<PriceRelatePartition[]>,
       required: true
+    },
+    customerId: {
+      type: [Number, null] as PropType<number | null>,
+      required: true
     }
   },
   emits: ['update:modelValue'],
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     let model = $ref<PriceRelatePartition[]>(props.modelValue);
 
     watch(
@@ -54,6 +58,19 @@ export default defineComponent({
       [BillingMethod.AREA_WEIGHT_INTERVAL_PRICE_WEIGHT]: AreaWeightIntervalPriceWeight
     };
 
+    const compRef = ref<
+      | InstanceType<typeof FixedPrice>
+      | InstanceType<typeof WeightIntervalPrice>
+      | InstanceType<typeof AreaIntervalPrice>
+      | InstanceType<typeof AreaWeightIntervalPriceWeight>
+    >();
+
+    expose({
+      validate: () => {
+        return compRef.value?.validate();
+      }
+    });
+
     const form = $computed(() => {
       if (props.billingMethod === null) {
         return <div>请选择计价方式</div>;
@@ -68,7 +85,9 @@ export default defineComponent({
               emit('update:modelValue', value);
               model = value;
             }}
+            customerId={props.customerId}
             priceType='fixed'
+            ref={compRef}
           />
         </div>
       ) : (
@@ -79,7 +98,9 @@ export default defineComponent({
               emit('update:modelValue', value);
               model = value;
             }}
+            customerId={props.customerId}
             priceType='p*w'
+            ref={compRef}
           />
         </div>
       );

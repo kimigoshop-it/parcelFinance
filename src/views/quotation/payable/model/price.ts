@@ -120,3 +120,45 @@ export class PartitionWeightPrice {
     }));
   }
 }
+
+const priceEnumLabelMap = {
+  businessType: {
+    [BusinessType.SPEC_LINE]: '专线',
+    [BusinessType.SPLIT]: '拆段'
+  },
+  businessNode: {
+    [BusinessNode.HEAD]: '头程',
+    [BusinessNode.CUSTOMS_CLEARANCE]: '清关',
+    [BusinessNode.LAST_MILE]: '尾程',
+    [BusinessNode.REVERSE]: '逆向',
+    [BusinessNode.SPEC_LINE]: '专线',
+    [BusinessNode.CLEAN_DELIVERY]: '清派一体'
+  },
+  priceType: {
+    [PriceType.PAYABLE]: '应付',
+    [PriceType.RECEIVABLE]: '应收'
+  },
+  goodType: {
+    [GoodType.NORMAL]: '普货',
+    [GoodType.HV]: 'HV',
+    [GoodType.EXPRESS]: '快递',
+    [GoodType.NON_H7]: 'NonH7'
+  },
+  lastMileService: {
+    [LastMileService.STORE_DELIVERY]: '店配',
+    [LastMileService.HOME_DELIVERY]: '宅配'
+  },
+  billingMethod: {
+    [BillingMethod.FIXED_PRICE]: '一口价',
+    [BillingMethod.WEIGHT_INTERVAL_FIXED_PRICE]: '重量区间固定价',
+    [BillingMethod.WEIGHT_INTERVAL_PRICE_WEIGHT]: '重量区间单价*重量',
+    [BillingMethod.AREA_INTERVAL_FIXED_PRICE]: '区域区间固定价',
+    [BillingMethod.AREA_INTERVAL_PRICE_WEIGHT]: '区域区间单价*重量',
+    [BillingMethod.AREA_WEIGHT_INTERVAL_FIXED_PRICE]: '区域重量区间固定价',
+    [BillingMethod.AREA_WEIGHT_INTERVAL_PRICE_WEIGHT]: '区域重量区间单价*重量'
+  }
+};
+
+export const getPriceEnumLabel = (enumName: string, value: number) => {
+  return priceEnumLabelMap[enumName][value];
+};

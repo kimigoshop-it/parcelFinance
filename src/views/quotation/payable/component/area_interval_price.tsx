@@ -3,6 +3,8 @@ import { NButton, NFormItem, NIcon, NInput, NSelect } from 'naive-ui';
 import { watch } from 'vue';
 import { Plus } from '@element-plus/icons-vue';
 import { Minus } from '@element-plus/icons-vue';
+import { notNullRule, positiveNumberRule } from '../model/rules';
+import { ref } from 'vue';
 
 export default defineComponent({
   name: 'WeightIntervalFixedPrice',
@@ -17,7 +19,7 @@ export default defineComponent({
     }
   },
   emits: ['update:modelValue'],
-  setup(props, { emit }) {
+  setup(props, { emit, expose }) {
     const partitions = $ref<PriceRelatePartition[]>(props.modelValue);
 
     if (partitions.length === 0) {
@@ -28,14 +30,42 @@ export default defineComponent({
       emit('update:modelValue', newVal);
     });
 
+    const formItemRef = ref<InstanceType<typeof NFormItem>[][]>([]);
+
+    expose({
+      validate: () => {
+        return formItemRef.value.flat(2).forEach((item) => {
+          return item.validate().catch((err) => {});
+        });
+      }
+    });
+
     return () => {
       return (
         <NFormItem label='重量区间固定价'>
-          <div class='flex flex-wrap flex-col gap-1'>
+          <div class='flex flex-wrap w-lg flex-col gap-1'>
             {partitions.map((item, index) => (
               <div class='inline-flex  gap-2 items-center'>
-                <NSelect placeholder='请选择区域' v-model:value={item.partitionId} />
-                <NInput placeholder='请输入价格' v-model:value={item.firstWeightPrice} />
+                <NFormItem
+                  class='w-50'
+                  ref={(el) => {
+                    if (!formItemRef.value[index]) formItemRef.value[index] = [];
+                    formItemRef.value[index][0] = el as any;
+                  }}
+                  rule={[notNullRule(item.partitionId, { name: '区域', trigger: 'blur' })]}
+                >
+                  <NSelect placeholder='请选择区域' v-model:value={item.partitionId} />
+                </NFormItem>
+                <NFormItem
+                  class='w-50'
+                  ref={(el) => {
+                    if (!formItemRef.value[index]) formItemRef.value[index] = [];
+                    formItemRef.value[index][1] = el as any;
+                  }}
+                  rule={[positiveNumberRule(item.firstWeightPrice)]}
+                >
+                  <NInput placeholder='请输入价格' v-model:value={item.firstWeightPrice} />
+                </NFormItem>
                 <NButton
                   type='primary'
                   size='small'
