@@ -8,6 +8,14 @@ export const queryPriceList = (data: any) => {
   });
 };
 
+export const queryPriceDetail = (id: number) => {
+  return requestRaw<Price>({
+    url: '/api/Price/QueryPriceDetail',
+    method: 'GET',
+    params: { id }
+  });
+};
+
 export const addPrice = (data: Price) => {
   return request<void>({
     url: '/api/Price/AddAndUpdatePrice',

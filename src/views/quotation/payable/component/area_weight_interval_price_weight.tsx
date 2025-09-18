@@ -53,15 +53,14 @@ export default defineComponent({
     const priceFormItemRef = ref<InstanceType<typeof NForm>[][]>([]);
 
     const validate = () => {
-      partitionFormItemRef.value.forEach((item) => {
-        return item.validate().catch((err) => {});
-      });
-      weightFormItemRef.value.flat(2).forEach((item) => {
-        return item.validate().catch((err) => {});
-      });
-      priceFormItemRef.value.flat(2).forEach((item) => {
-        return item.validate().catch((err) => {});
-      });
+      console.log('validate', partitionFormItemRef.value, weightFormItemRef.value, priceFormItemRef.value);
+      const tasks = [
+        ...partitionFormItemRef.value.filter(item=> item!==undefined && item!==null).map((item) => item.validate()),
+        ...weightFormItemRef.value.flat(2).filter(item=> item!==undefined && item!==null).map((item) => item.validate()),
+        ...priceFormItemRef.value.flat(2).filter(item=> item!==undefined && item!==null).map((item) => item.validate())
+      ];
+
+      return Promise.all(tasks);
     };
 
     expose({
@@ -73,6 +72,7 @@ export default defineComponent({
         <NDataTable
           bordered={true}
           singleLine={false}
+          rowKey={(row) => row.partitionId}
           theme-overrides={{
             tdColorHover: '#fff',
             tdColor: '#fff',
@@ -239,6 +239,9 @@ export default defineComponent({
                         text
                         onClick={() => {
                           model.splice(rowIndex, 1);
+                          partitionFormItemRef.value.splice(rowIndex, 1);
+                          weightFormItemRef.value.splice(rowIndex, 1);
+                          priceFormItemRef.value.splice(rowIndex, 1);
                         }}
                       >
                         删除

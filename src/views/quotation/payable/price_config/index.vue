@@ -10,18 +10,10 @@
           <PartitionSelect v-model="form.customerId" />
         </n-form-item>
         <n-form-item label-placement="left" label="业务模式" path="businessType">
-          <n-select
-            placeholder="请选择业务模式"
-            v-model:value="form.businessType"
-            :options="FormConf.businessTypeOptions"
-          />
+          <n-select placeholder="请选择业务模式" v-model:value="form.businessType" :options="FormConf.businessTypeOptions" />
         </n-form-item>
         <n-form-item label-placement="left" label="业务节点" path="businessNode">
-          <n-select
-            placeholder="请选择业务节点"
-            v-model:value="form.businessNode"
-            :options="FormConf.businessNodeOptions"
-          />
+          <n-select placeholder="请选择业务节点" v-model:value="form.businessNode" :options="FormConf.businessNodeOptions" />
         </n-form-item>
         <n-form-item label-placement="left" label="结算货币" path="currencyId">
           <CurrencySelect v-model="form.currencyId" />
@@ -30,29 +22,17 @@
           <n-select placeholder="请选择货物类型" v-model:value="form.goodType" :options="FormConf.goodTypeOptions" />
         </n-form-item>
         <n-form-item label-placement="left" label="尾程服务" path="lastMileService">
-          <n-select
-            placeholder="请选择尾程服务"
-            v-model:value="form.lastMileService"
-            :options="FormConf.lastMileServiceOptions"
-          />
+          <n-select placeholder="请选择尾程服务" v-model:value="form.lastMileService"
+            :options="FormConf.lastMileServiceOptions" />
         </n-form-item>
       </div>
 
       <div>
         <n-form-item label-placement="left" label="计价方式" path="billingMethod">
-          <n-select
-            placeholder="请选择计价方式"
-            v-model:value="form.billingMethod"
-            :options="FormConf.billingMethodOptions"
-          />
+          <n-select placeholder="请选择计价方式" v-model:value="form.billingMethod" :options="FormConf.billingMethodOptions" />
         </n-form-item>
-        <Billing
-          ref="billingRef"
-          :billingMethod="form.billingMethod"
-          :customerId="form.customerId"
-          v-model="form.priceRelatePartitionDtoModels"
-          @update:model-value="handleUpdateModelValue"
-        />
+        <Billing ref="billingRef" :billingMethod="form.billingMethod" :customerId="form.customerId"
+          v-model="form.priceRelatePartitionDtoModels" />
       </div>
 
       <div class="flex flex-center">
@@ -68,16 +48,20 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 import FormConf from './form_conf';
-import Billing, { PricePartition } from '../component/billing';
+import Billing, { BillingExpose, PricePartition } from '../component/billing';
 import PartitionSelect from '~/src/components/business/CustomerSelect.vue';
 import CurrencySelect from '@/components/business/CurrencySelect.vue';
 import { BillingMethod, PriceType } from '../model/price';
-import { ref } from 'vue';
+import { onMounted, ref, toRaw } from 'vue';
 import { NForm } from 'naive-ui';
-import { addPrice } from '~/src/service/api';
+import { addPrice as addOrUpdatePrice, queryPriceDetail } from '~/src/service/api';
+
 
 const route = useRoute();
 const router = useRouter();
+
+// 报价单id
+const quotationId = $ref<number | undefined>(route.query.id ?? undefined as any);
 
 const action: 'edit' | 'add' = route.query.action as 'edit' | 'add';
 const actionText = $computed(() => {
@@ -93,10 +77,6 @@ const form = $ref<Price>({
   priceRelatePartitionDtoModels: []
 } as any);
 
-const handleUpdateModelValue = (newVal: PriceRelatePartition[]) => {
-  console.log(newVal);
-};
-
 // 规则
 const rules = {
   customerId: [{ required: true, message: '请选择所属项目' }],
@@ -108,24 +88,49 @@ const rules = {
   billingMethod: [{ required: true, message: '请选择计价方式' }]
 };
 
-const billingRef = ref<InstanceType<typeof Billing> | undefined>(undefined);
+const billingRef = ref<BillingExpose | undefined>(undefined);
 
-const validate = async () => {
-  await billingRef.value?.validate();
-  await formRef.value?.validate();
-  return true;
+const validate = () => {
+  const billingValidate = billingRef.value?.validate();
+  const formValidate = formRef.value?.validate();
+  return Promise.all([billingValidate, formValidate]);
 };
 
 const submit = () => {
   validate().then(() => {
-    console.log(form);
-    addPrice(form).then((res) => {
-      console.log(res);
+    addOrUpdatePrice(form).then((res) => {
+      router.back();
     });
+  }).catch((err) => {
+    console.log(toRaw(form));
+    console.log(err);
   });
 };
+
+function queryQuotation() {
+  queryPriceDetail(quotationId!).then((res) => {
+    console.log(res);
+    if (action === 'edit') {
+      form.id = res.id;
+    }
+    form.customerId = res.customerId;
+    form.businessType = res.businessType;
+    form.businessNode = res.businessNode;
+    form.currencyId = res.currencyId;
+    form.goodType = res.goodType;
+    form.lastMileService = res.lastMileService;
+    form.billingMethod = res.billingMethod;
+    form.priceRelatePartitionDtoModels = res.priceRelatePartitionList;
+  });
+}
 
 const cancel = () => {
   router.back();
 };
+
+onMounted(() => {
+  if (action === 'edit') {
+    queryQuotation();
+  }
+});
 </script>

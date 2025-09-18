@@ -58,9 +58,14 @@ interface Price {
   updateName?: string | null;
 
   /**
-   * 价格关联分区
+   * 价格关联分区(提交表单用)
    */
   priceRelatePartitionDtoModels: PriceRelatePartition[];
+
+  /**
+   * 价格关联分区(query detail 返回)
+   */
+  priceRelatePartitionList: PriceRelatePartition[];
 
   /**
    * 创建日期

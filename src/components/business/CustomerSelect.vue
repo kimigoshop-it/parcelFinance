@@ -1,5 +1,5 @@
 <template>
-  <n-select placeholder="请选择所属项目" :value="value" @update:value="handleUpdateValue" :options="options" clearable />
+  <n-select placeholder="请选择所属项目" v-model:value="value" :options="options" clearable />
 </template>
 
 <script setup lang="ts">
@@ -16,13 +16,16 @@ const props = defineProps({
 });
 const emit = defineEmits(['update:modelValue'])
 
-let value = $ref(props.modelValue)
+let value = $computed({
+  get: () => props.modelValue,
+  set: (val) => emit('update:modelValue', val)
+})
 let options = $ref<{ label: string; value: number }[]>([])
 
-const handleUpdateValue = (val: string | number | null | undefined) => {
-  value = val
-  emit('update:modelValue', val)
-}
+// const handleUpdateValue = (val: string | number | null | undefined) => {
+//   value = val
+//   emit('update:modelValue', val)
+// }
 
 onMounted(() => {
   queryCustomerBaseInfoList({}).then((res) => {

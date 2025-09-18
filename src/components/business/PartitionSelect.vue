@@ -1,6 +1,5 @@
 <template>
-  <n-select placeholder="请选择分区" :value="value" @update:value="(val) => handleUpdateValue(val)"
-    :options="computedOptions" clearable />
+  <n-select placeholder="请选择分区" v-model:value="value" :options="computedOptions" clearable />
 </template>
 
 <script setup lang="ts">
@@ -25,15 +24,15 @@ const props = defineProps({
   }
 });
 
-let value = $ref(props.modelValue)
+let value = $computed({
+  get: () => props.modelValue,
+  set: (val) => {
+    emit('update:modelValue', val)
+  }
+})
 const emit = defineEmits(['update:modelValue'])
 
 let options = $ref<{ label: string; value: string | number }[]>([])
-
-const handleUpdateValue = (val: number | null | undefined) => {
-  value = val
-  emit('update:modelValue', val)
-}
 
 const computedOptions = computed(() => {
   return options.map(option => {
@@ -64,7 +63,7 @@ onMounted(() => {
 });
 
 watch(() => props.customerId, () => {
-  handleUpdateValue(null)
+  value = null
   refreshOptions()
   console.log('value', value)
 })

@@ -31,9 +31,9 @@ export default defineComponent({
 
     expose({
       validate: () => {
-        return formItemRef.value.flat(2).forEach((item) => {
-          return item.validate().catch((err) => {});
-        });
+        const tasks = formItemRef.value.flat(2).filter(item=> item!==undefined && item!==null).map((item) => item.validate());
+
+        return Promise.all(tasks);
       }
     });
     return () => {
@@ -121,6 +121,7 @@ export default defineComponent({
                     circle
                     onClick={() => {
                       partitions.splice(index, 1);
+                      formItemRef.value.splice(index, 1);
                     }}
                   >
                     {{

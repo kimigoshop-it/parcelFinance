@@ -18,6 +18,10 @@ export interface PricePartition {
   partitions: PriceRelatePartition[];
 }
 
+export type BillingExpose = {
+  validate: () => Promise<boolean>;
+};
+
 export default defineComponent({
   name: 'Billing',
   props: {
@@ -36,17 +40,11 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   setup(props, { emit, expose }) {
-    let model = $ref<PriceRelatePartition[]>(props.modelValue);
-
-    watch(
-      model,
-      (newVal) => {
-        emit('update:modelValue', newVal);
-      },
-      {
-        deep: true
-      }
-    );
+    // let model = $ref<PriceRelatePartition[]>(props.modelValue);
+    let model = $computed({
+      get: () => props.modelValue,
+      set: (val) => emit('update:modelValue', val)
+    });
 
     const formMap = {
       [BillingMethod.FIXED_PRICE]: FixedPrice,
@@ -58,12 +56,7 @@ export default defineComponent({
       [BillingMethod.AREA_WEIGHT_INTERVAL_PRICE_WEIGHT]: AreaWeightIntervalPriceWeight
     };
 
-    const compRef = ref<
-      | InstanceType<typeof FixedPrice>
-      | InstanceType<typeof WeightIntervalPrice>
-      | InstanceType<typeof AreaIntervalPrice>
-      | InstanceType<typeof AreaWeightIntervalPriceWeight>
-    >();
+    const compRef = ref<{ validate: () => Promise<boolean> }>();
 
     expose({
       validate: () => {
@@ -82,7 +75,6 @@ export default defineComponent({
           <Comp
             modelValue={model}
             onUpdate:modelValue={(value) => {
-              emit('update:modelValue', value);
               model = value;
             }}
             customerId={props.customerId}
@@ -95,7 +87,6 @@ export default defineComponent({
           <Comp
             modelValue={model}
             onUpdate:modelValue={(value) => {
-              emit('update:modelValue', value);
               model = value;
             }}
             customerId={props.customerId}

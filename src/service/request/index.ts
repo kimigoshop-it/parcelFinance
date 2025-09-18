@@ -18,9 +18,9 @@ export const request = <T>(config: AxiosRequestConfig & { showMsg?: boolean }): 
         }
         // status失败 success为true 认为是请求成功但业务失败
         else if (res.data.success && !res.data.status) {
-          window.$message.warning(res.data.message ?? '操作失败');
+          return Promise.reject(res.data);
         } else {
-          window.$message.error(res.data.message ?? '操作失败');
+          return Promise.reject(res.data);
         }
       }
       return res.data;

@@ -17,7 +17,10 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-let value = $ref(props.modelValue)
+let value = $computed({
+  get: () => props.modelValue,
+  set: (val) => emit('update:modelValue', val)
+})
 
 let options = $ref<{ label: string; value: number }[]>([])
 

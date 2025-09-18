@@ -12,13 +12,8 @@
         <n-button type="primary" @click="handleAdd">新增</n-button>
       </div>
       <div class="flex-1 min-h-0 overflow-auto">
-        <n-data-table
-          :max-height="maxTableHeight"
-          :single-line="false"
-          :columns="columns"
-          :data="data"
-          :theme-overrides="themeOverrides"
-        />
+        <n-data-table :max-height="maxTableHeight" :single-line="false" :columns="columns" :data="data"
+          :theme-overrides="themeOverrides" />
       </div>
 
       <!-- 底部分页固定 -->
@@ -144,7 +139,13 @@ const columns = [
         <n-button
           type='primary'
           onClick={() => {
-            // todo
+            router.push({
+              name: 'quotation_payable_price_config',
+              query: {
+                action: 'edit',
+                id: row.id
+              }
+            });
           }}
         >
           编辑
