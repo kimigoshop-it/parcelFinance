@@ -16,5 +16,6 @@ export const views: Record<RouterPage.LastDegreeRouteKey, RouteComponent | (() =
   quotation_payable: () => import('./quotation/payable/index.vue'),
   quotation_price_config: () => import('./quotation/price_config/index.vue'),
   quotation_receivable: () => import('./quotation/receivable/index.vue'),
-  settlement_settlement_area: () => import('./settlement/settlement_area/index.vue')
+  settlement_settlement_area: () => import('./settlement/settlement_area/index.vue'),
+  test_three_section: () => import('./test/three_section/index.vue')
 };

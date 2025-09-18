@@ -1,7 +1,7 @@
 <template>
   <n-card>
     <div class="flex justify-center py-10 items-center">
-      <div class="text-2xl font-bold">{{ actionText + '应收报价' }}</div>
+      <div class="text-2xl font-bold">{{ `${actionText}${priceTypeText}报价` }}</div>
     </div>
     <n-form ref="formRef" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 14 }" :rules="rules">
       <div class="grid grid-cols-3 gap-4">
@@ -63,11 +63,15 @@ const router = useRouter();
 // 报价单id
 const quotationId = $ref<number | undefined>(route.query.id ?? undefined as any);
 // 报价类型
-const priceType = $ref<PriceType>(route.query.priceType! as any);
+const priceType = $ref<PriceType>(Number(route.query.priceType)! as any);
 // 操作类型
 const action: 'edit' | 'add' = route.query.action as 'edit' | 'add';
 const actionText = $computed(() => {
   return action === 'edit' ? '编辑' : '新增';
+});
+
+const priceTypeText = $computed(() => {
+  return priceType === PriceType.RECEIVABLE ? '应收' : '应付';
 });
 
 const formRef = ref<InstanceType<typeof NForm> | undefined>(undefined);
