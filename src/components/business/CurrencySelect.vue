@@ -1,5 +1,5 @@
 <template>
-  <n-select placeholder="请选择结算货币" :value="value" :options="options" clearable @update:value="handleUpdateValue" />
+  <n-select placeholder="请选择结算货币" v-model:value="value" :options="options" clearable />
 </template>
 
 <script setup lang="ts">
@@ -23,11 +23,6 @@ let value = $computed({
 })
 
 let options = $ref<{ label: string; value: number }[]>([])
-
-const handleUpdateValue = (val: number | null | undefined) => {
-  value = val
-  emit('update:modelValue', value)
-}
 
 onMounted(() => {
   querySystemDictionaryDetailList({

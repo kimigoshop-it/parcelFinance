@@ -1,5 +1,5 @@
 <template>
-  <price-table :priceType="PriceType.PAYABLE"></price-table>
+  <price-table :priceType="PriceType.RECEIVABLE"></price-table>
 </template>
 
 <script lang="ts" setup>

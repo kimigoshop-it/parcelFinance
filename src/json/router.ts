@@ -104,8 +104,18 @@ export default [
         }
       },
       {
-        name: 'quotation_payable_price_config',
-        path: '/quotation/payable/price_config',
+        name: 'quotation_receivable',
+        path: '/quotation/receivable',
+        component: 'self',
+        meta: {
+          title: '应收报价',
+          localIcon: 'dot',
+          requiresAuth: true
+        }
+      },
+      {
+        name: 'quotation_price_config',
+        path: '/quotation/price_config',
         component: 'self',
         meta: {
           title: '应收报价编辑',

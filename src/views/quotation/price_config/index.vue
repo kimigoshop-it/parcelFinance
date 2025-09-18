@@ -48,10 +48,10 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 import FormConf from './form_conf';
-import Billing, { BillingExpose, PricePartition } from '../component/billing';
+import Billing, { BillingExpose, PricePartition } from '../shared/component/billing';
 import PartitionSelect from '~/src/components/business/CustomerSelect.vue';
 import CurrencySelect from '@/components/business/CurrencySelect.vue';
-import { BillingMethod, PriceType } from '../model/price';
+import { BillingMethod, PriceType } from '../shared/model/price';
 import { onMounted, ref, toRaw } from 'vue';
 import { NForm } from 'naive-ui';
 import { addPrice as addOrUpdatePrice, queryPriceDetail } from '~/src/service/api';
@@ -62,7 +62,9 @@ const router = useRouter();
 
 // 报价单id
 const quotationId = $ref<number | undefined>(route.query.id ?? undefined as any);
-
+// 报价类型
+const priceType = $ref<PriceType>(route.query.priceType! as any);
+// 操作类型
 const action: 'edit' | 'add' = route.query.action as 'edit' | 'add';
 const actionText = $computed(() => {
   return action === 'edit' ? '编辑' : '新增';
@@ -70,7 +72,7 @@ const actionText = $computed(() => {
 
 const formRef = ref<InstanceType<typeof NForm> | undefined>(undefined);
 const form = $ref<Price>({
-  priceType: PriceType.PAYABLE,
+  priceType: priceType,
   customerId: null,
   name: '',
   billingMethod: null,
