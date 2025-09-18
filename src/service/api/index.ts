@@ -4,3 +4,4 @@ export * from "./partition";
 export * from "./price";
 export * from "./customer";
 export * from "./dict";
+export * from "./finance";

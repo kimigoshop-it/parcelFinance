@@ -48,6 +48,30 @@ export default [
     ]
   },
   {
+    name: 'payable_statement',
+    path: '/payable_statement',
+    component: 'basic',
+    meta: {
+      title: '应付账单',
+      localIcon: 'circum_crop',
+      order: 1,
+    },
+    children: [
+      {
+        name: 'payable_statement_list',
+        path: '/payable_statement/list',
+        component: 'self',
+        meta: {
+          title: '应付账单',
+          localIcon: 'dot',
+          requiresAuth: true,
+          hide: false,
+          keepAlive: true
+        }
+      }
+    ]
+  },
+  {
     name: 'orderforgoods',
     path: '/orderforgoods',
     component: 'basic',
