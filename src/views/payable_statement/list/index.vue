@@ -14,10 +14,13 @@ import { FormItem } from '@/components/basic-form'
 import { TableColumn } from 'naive-ui/es/data-table/src/interface';
 import { queryFinancialStatement } from '@/service/api';
 import { onMounted } from 'vue';
-import { getPriceEnumLabel } from "@/views/quotation/shared/model/price"
+import { getEnumLabel } from '~/src/typings/business/shared/enum_label_map';
 import { getFinanceTag } from "@/typings/business/finance"
 import FinanceOptions from '@/typings/business/finance/options';
 import { dayjs } from 'element-plus';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const filterParams = $ref<QueryFinancialStatementParams>({
   pageIndex: 1,
@@ -63,7 +66,7 @@ const columns = $ref<TableColumn<FinancialStatement>[]>([
     key: 'billType',
     title: '账单类型',
     render: (row: FinancialStatement) => {
-      return <div>{getPriceEnumLabel('priceType', row.billType!)}</div>
+      return <div>{getEnumLabel('priceType', row.billType!)}</div>
     }
   },
   {
@@ -89,7 +92,7 @@ const columns = $ref<TableColumn<FinancialStatement>[]>([
   {
     key: 'billStatus',
     title: '账单状态',
-    render: (row) => <div>{getFinanceTag('billStatus', row.billStatus!)}</div>
+    render: (row) => <div>{getFinanceTag('billStatusPayable',  row.billStatus!)}</div>
   },
   {
     key: 'billNode',
@@ -99,7 +102,14 @@ const columns = $ref<TableColumn<FinancialStatement>[]>([
     key: 'actions',
     title: '操作',
     render: (row: FinancialStatement) => {
-      return <n-button type="primary" size="small">去对账</n-button>
+      return <n-button onClick={() => {
+        router.push({
+          name: 'payable_statement_detail',
+          query: {
+            id: row.id,
+          }
+        })
+      }} type="primary" size="small">去对账</n-button>
     }
   }
 ]);

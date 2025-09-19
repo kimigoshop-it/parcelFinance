@@ -54,7 +54,7 @@ export default [
     meta: {
       title: '应付账单',
       localIcon: 'circum_crop',
-      order: 1,
+      order: 1
     },
     children: [
       {
@@ -67,6 +67,15 @@ export default [
           requiresAuth: true,
           hide: false,
           keepAlive: true
+        }
+      },
+      {
+        name: 'payable_statement_detail',
+        path: '/payable_statement/detail',
+        component: 'self',
+        meta: {
+          title: '应付账单详情',
+          localIcon: 'dot',
         }
       }
     ]

@@ -28,7 +28,8 @@
 import { onMounted, PropType } from 'vue';
 import { queryCustomerBaseInfoList, queryPriceList } from '~/src/service';
 import { useRouter } from 'vue-router';
-import { getPriceEnumLabel, PriceType } from '../model/price';
+import { getPriceEnumLabel } from '../model/price';
+import { PriceType } from '@/typings/business/shared';
 import SearchArea from '@/components/search-area/index.vue';
 import PriceOptions from '../../price_config/form_conf';
 import { ElSelect } from 'element-plus';

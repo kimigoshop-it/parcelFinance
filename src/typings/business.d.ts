@@ -40,6 +40,6 @@ declare type SystemDictionaryDetail = {
 
 declare type BaseQueryParams = {
   pageIndex: number;
-  pageSize?: number;
-  total?: number;
+  pageSize: number;
+  total: number;
 };

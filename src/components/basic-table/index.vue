@@ -6,7 +6,7 @@
       </n-card>
     </template>
 
-    <template #main>
+    <template #default>
       <n-card class="h-full">
         <n-data-table :min-row-height="37" :single-line="false" :columns="columns" :data="data"
           :max-height="contentHeight" :theme-overrides="themeOverrides" />
@@ -31,7 +31,7 @@ import { TableColumn, RowData } from 'naive-ui/es/data-table/src/interface';
 import { ref } from 'vue';
 
 const section = ref<InstanceType<typeof ThreeSection>>()
-const contentHeight = $computed(() => section.value?.contentHeight ?? 400 - 115)
+const contentHeight = $computed(() => (section.value?.contentHeight ?? 400) - 115)
 
 const themeOverrides = {
   tdColorHover: '#fff',

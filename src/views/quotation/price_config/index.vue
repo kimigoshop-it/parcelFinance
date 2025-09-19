@@ -51,7 +51,7 @@ import FormConf from './form_conf';
 import Billing, { BillingExpose, PricePartition } from '../shared/component/billing';
 import PartitionSelect from '~/src/components/business/CustomerSelect.vue';
 import CurrencySelect from '@/components/business/CurrencySelect.vue';
-import { BillingMethod, PriceType } from '../shared/model/price';
+import { PriceType } from '@/typings/business/shared';
 import { onMounted, ref, toRaw } from 'vue';
 import { NForm } from 'naive-ui';
 import { addPrice as addOrUpdatePrice, queryPriceDetail } from '~/src/service/api';

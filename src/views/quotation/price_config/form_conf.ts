@@ -1,4 +1,5 @@
-import { BillingMethod, BusinessNode, BusinessType, GoodType, LastMileService, PriceType } from '../shared/model/price';
+import { BillingMethod } from '../shared/model/price';
+import { BusinessType, BusinessNode, GoodType, LastMileService, PriceType } from '@/typings/business/shared';
 
 export default {
   businessTypeOptions: [

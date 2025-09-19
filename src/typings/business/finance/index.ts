@@ -6,13 +6,24 @@ export enum BillStatus {
 }
 
 const financeEnumLabelMap = {
-  billStatus: {
+  billStatusPayable: {
     [BillStatus.WAITING_FOR_BILL]: '待对账',
-    [BillStatus.WAITING_FOR_CONFIRM]: '待确认',
-    [BillStatus.HAS_BEEN_CONFIRMED]: '已确认'
+    [BillStatus.WAITING_FOR_CONFIRM]: '待付款',
+    [BillStatus.HAS_BEEN_CONFIRMED]: '已付款'
+  },
+  billStatusReceivable: {
+    [BillStatus.WAITING_FOR_BILL]: '待对账',
+    [BillStatus.WAITING_FOR_CONFIRM]: '待收款',
+    [BillStatus.HAS_BEEN_CONFIRMED]: '已收款'
   }
 };
 
 export function getFinanceTag(enumName: string, value: number) {
   return financeEnumLabelMap[enumName][value];
 }
+
+export const billStatusColors = {
+  [BillStatus.WAITING_FOR_BILL]: '#000',
+  [BillStatus.WAITING_FOR_CONFIRM]: '#f30',
+  [BillStatus.HAS_BEEN_CONFIRMED]: '#009900'
+};

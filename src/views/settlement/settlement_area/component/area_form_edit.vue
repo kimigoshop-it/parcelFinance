@@ -26,7 +26,7 @@ const emit = defineEmits<{
   (e: 'success'): void;
 }>();
 
-const countryStore = BusinessStore.country;
+const countryStore = BusinessStore().country;
 
 // 区划缓存
 let country = countryStore.getCountry(props.country.id);

@@ -7,12 +7,19 @@ declare interface QueryFinancialStatementParams extends BaseQueryParams {
   billType?: number;
 }
 
+declare interface FinancialStatementView extends Omit<FinancialStatement, 'financialStatementDetailsList'> {
+  financialStatementDetailsList: Response<FinancialStatementDetails[]>;
+}
+
 declare interface FinancialStatement {
   /** 主键Id */
   id: number;
 
   /** 账单编号 */
   bilNumber?: string | null;
+
+  /** 客户名称 */
+  customerName: string;
 
   /** 对账类型（0：应付，1：应收） */
   billType?: number | null;
@@ -36,12 +43,12 @@ declare interface FinancialStatement {
   billNode?: string | null;
 
   /** 对账详情 */
-  financialStatementDetailsList: Response<FinancialStatementDetails>;
+  financialStatementDetailsList: FinancialStatementDetails[];
 }
 
 declare interface FinancialStatementDetails {
   /** 账单编号 */
-  billNumber?: string | null;
+  bilNumber?: string | null;
 
   /** 计费单号 */
   billCdoe?: string | null;
