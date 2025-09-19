@@ -28,6 +28,7 @@
 import { onMounted, PropType } from 'vue';
 import { queryCustomerBaseInfoList, queryPriceList } from '~/src/service';
 import { useRouter } from 'vue-router';
+import { getEnumLabel } from '~/src/typings/business/shared/enum_label_map';
 import { getPriceEnumLabel } from '../model/price';
 import { PriceType } from '@/typings/business/shared';
 import SearchArea from '@/components/search-area/index.vue';
@@ -98,35 +99,35 @@ const columns = [
     title: '业务模式',
     key: 'businessType',
     render: (row: Price) => {
-      return <>{getPriceEnumLabel('businessType', row.businessType!)}</>;
+      return <>{getEnumLabel('businessType', row.businessType!)}</>;
     }
   },
   {
     title: '报价类型',
     key: 'priceType',
     render: (row: Price) => {
-      return <>{getPriceEnumLabel('priceType', row.priceType!)}</>;
+      return <>{getEnumLabel('priceType', row.priceType!)}</>;
     }
   },
   {
     title: '业务节点',
     key: 'businessNode',
     render: (row: Price) => {
-      return <>{getPriceEnumLabel('businessNode', row.businessNode!)}</>;
+      return <>{getEnumLabel('businessNode', row.businessNode!)}</>;
     }
   },
   {
     title: '尾程服务',
     key: 'lastMileService',
     render: (row: Price) => {
-      return <>{getPriceEnumLabel('lastMileService', row.lastMileService!)}</>;
+      return <>{getEnumLabel('lastMileService', row.lastMileService!)}</>;
     }
   },
   {
     title: '货物类型',
     key: 'goodType',
     render: (row: Price) => {
-      return <>{getPriceEnumLabel('goodType', row.goodType!)}</>;
+      return <>{getEnumLabel('goodType', row.goodType!)}</>;
     }
   },
   {

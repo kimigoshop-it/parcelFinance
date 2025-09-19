@@ -29,6 +29,6 @@ const priceEnumLabelMap = {
   },
 };
 
-export const getEnumLabel = (enumName: string, value: number) => {
+export const getEnumLabel = (enumName: keyof typeof priceEnumLabelMap, value: number) => {
   return priceEnumLabelMap[enumName][value];
 };

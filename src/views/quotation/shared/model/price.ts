@@ -1,4 +1,3 @@
-
 export enum BillingMethod {
   /** 一口价 */
   FIXED_PRICE = 0,
@@ -84,6 +83,6 @@ const priceEnumLabelMap = {
   }
 };
 
-export const getPriceEnumLabel = (enumName: string, value: number) => {
+export const getPriceEnumLabel = (enumName: keyof typeof priceEnumLabelMap, value: number) => {
   return priceEnumLabelMap[enumName][value];
 };
