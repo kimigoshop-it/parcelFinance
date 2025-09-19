@@ -1,37 +1,63 @@
 <template>
-  <ThreeSection>
-    <template #header>
-
+  <basic-table :columns="columns" :data="data" v-model:filters="filterParams" @update:page="queryPage">
+    <template #search>
+      <SearchArea :formItems="searchAreaItems" v-model="filterParams" @search="queryPage" @reset="queryPage" />
     </template>
-
-    <template #main>
-      <n-data-table :columns="columns" :data="data" />
-    </template>
-
-    <template #footer>
-
-    </template>
-  </ThreeSection>
+  </basic-table>
 </template>
 
 <script lang="tsx" setup>
-import ThreeSection from '@/components/layout/ThreeSection.vue';
+import BasicTable from '@/components/basic-table/index.vue';
+import SearchArea from '@/components/search-area/index.vue';
+import CustomerSelect from '@/components/business/CustomerSelect.vue';
+import { FormItem } from '@/components/basic-form'
 import { TableColumn } from 'naive-ui/es/data-table/src/interface';
 import { queryFinancialStatement } from '@/service/api';
 import { onMounted } from 'vue';
 import { getPriceEnumLabel } from "@/views/quotation/shared/model/price"
 import { getFinanceTag } from "@/typings/business/finance"
-import { Row } from 'vant';
+import FinanceOptions from '@/typings/business/finance/options';
+import { dayjs } from 'element-plus';
 
 const filterParams = $ref<QueryFinancialStatementParams>({
   pageIndex: 1,
   pageSize: 10,
+  total: 0
 });
+
+// 搜索区域
+const searchAreaItems = $ref<FormItem[]>([
+  {
+    label: '账单日期',
+    name: 'billDate',
+    component: 'DatePicker',
+    attrs: {
+      clearable: true
+    }
+  },
+  {
+    label: '账单状态',
+    name: 'status',
+    component: 'Select',
+    attrs: {
+      options: FinanceOptions.BillStatusOptions,
+      clearable: true
+    }
+  },
+  {
+    label: '所属项目',
+    name: 'customerId',
+    component: 'Customer',
+    render: () => <CustomerSelect formType="element" v-model={filterParams.customerId} />
+  }
+]);
+
 
 const columns = $ref<TableColumn<FinancialStatement>[]>([
   {
     key: 'bilNumber',
     title: '账单编号',
+    width: 200,
   },
   {
     key: 'billType',
@@ -43,10 +69,14 @@ const columns = $ref<TableColumn<FinancialStatement>[]>([
   {
     key: 'billTime',
     title: '账单时间',
+    width: 200,
+    render: (row: FinancialStatement) => <div>{dayjs(row.billTime).format('YYYY-MM-DD HH:mm:ss')}</div>
   },
   {
     key: 'endBillTime',
     title: '结束账单时间',
+    width: 200,
+    render: (row: FinancialStatement) => <div>{dayjs(row.endBillTime).format('YYYY-MM-DD HH:mm:ss')}</div>
   },
   {
     key: 'currency',
@@ -69,7 +99,7 @@ const columns = $ref<TableColumn<FinancialStatement>[]>([
     key: 'actions',
     title: '操作',
     render: (row: FinancialStatement) => {
-      return <n-button>去对账</n-button>
+      return <n-button type="primary" size="small">去对账</n-button>
     }
   }
 ]);
@@ -79,6 +109,7 @@ let data = $ref<FinancialStatement[]>([]);
 function queryPage() {
   queryFinancialStatement(filterParams).then(res => {
     data = res.data;
+    filterParams.total = res.total;
   });
 }
 

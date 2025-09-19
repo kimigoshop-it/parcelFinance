@@ -118,6 +118,7 @@ export default defineComponent({
                         item.render!()
                       ) : (
                         <Comp
+                          class="flex-1"
                           v-model={model[item.name]}
                           onUpdate:modelValue={(value) => updateValue(item.name, value)}
                           {...(item.attrs || {})}

@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, defineExpose } from 'vue';
 
 const containerHeight = ref(0);
 const contentHeight = ref(0);
@@ -47,7 +47,9 @@ function computeHeight() {
   console.log(containerHeight.value, contentHeight.value);
 }
 
-
+defineExpose({
+  contentHeight
+})
 
 
 onMounted(() => {
@@ -65,20 +67,16 @@ onUnmounted(() => {
 #container {
   display: flex;
   flex-direction: column;
-  border: 1px solid #000;
   position: relative;
 }
 
-#ts_header {
-  background: #f88;
-}
+#ts_header {}
 
 #ts_footer {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #f44;
 }
 
 #ts_main {
