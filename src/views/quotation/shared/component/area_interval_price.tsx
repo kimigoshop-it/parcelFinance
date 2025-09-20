@@ -5,6 +5,7 @@ import { Plus } from '@element-plus/icons-vue';
 import { Minus } from '@element-plus/icons-vue';
 import { notNullRule, positiveNumberRule } from '../model/rules';
 import { ref } from 'vue';
+import PartitionSelect from '@/components/business/PartitionSelect.vue';
 
 export default defineComponent({
   name: 'WeightIntervalFixedPrice',
@@ -15,6 +16,10 @@ export default defineComponent({
     },
     priceType: {
       type: String as PropType<'fixed' | 'p*w'>,
+      required: true
+    },
+    customerId: {
+      type: [Number, null] as PropType<number | null>,
       required: true
     }
   },
@@ -57,7 +62,11 @@ export default defineComponent({
                   }}
                   rule={[notNullRule(item.partitionId, { name: '区域', trigger: 'blur' })]}
                 >
-                  <NSelect placeholder='请选择区域' v-model:value={item.partitionId} />
+                  <PartitionSelect
+                    disableValues={partitions.map((item) => item.partitionId)}
+                    customerId={props.customerId}
+                    v-model={item.partitionId}
+                  />
                 </NFormItem>
                 <NFormItem
                   class='w-50'
