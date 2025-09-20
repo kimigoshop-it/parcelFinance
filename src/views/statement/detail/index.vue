@@ -20,7 +20,7 @@
             <div class=flex-1>所属项目: {{ finance?.customerName }}</div>
             <n-space>
               <div>币种: {{ finance?.currency }}</div>
-              <div :style="{ color: billStatusColors[finance?.billStatus!] }">已付款</div>
+              <div :style="{ color: billStatusColors[finance?.billStatus!] }">{{ getFinanceTag('billStatusPayable', finance?.billStatus!) }}</div>
             </n-space>
           </div>
           <div>账单编号: {{ finance?.bilNumber }}</div>
@@ -60,7 +60,7 @@ import { computed, onMounted, ref } from 'vue';
 import ThreeSection from '~/src/components/layout/ThreeSection.vue';
 import dayjs from 'dayjs';
 import { getEnumLabel } from '~/src/typings/business/shared/enum_label_map';
-import { billStatusColors } from '~/src/typings/business/finance';
+import { billStatusColors, getFinanceTag } from '~/src/typings/business/finance';
 import StickyHeadTable from '~/src/components/sticky-head-table/index.vue';
 import Form from './form/form.vue';
 import { isNaN } from 'lodash-es';
