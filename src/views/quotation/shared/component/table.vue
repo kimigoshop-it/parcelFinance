@@ -36,6 +36,7 @@ import { PriceType } from '@/typings/business/shared';
 import SearchArea from '@/components/search-area/index.vue';
 import PriceOptions from '../../price_config/form_conf';
 import { ElSelect } from 'element-plus';
+import { FormItem } from '~/src/components/basic-form';
 
 const themeOverrides = {
   tdColorHover: '#fff',
@@ -65,7 +66,7 @@ let filter = $ref({
 
 let options = $ref<{ label: string; value: number }[]>([]);
 
-const searchFormItems = [
+const searchFormItems: FormItem[] = [
   {
     label: '所属项目',
     name: 'customerId',
