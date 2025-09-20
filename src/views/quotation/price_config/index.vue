@@ -9,19 +9,23 @@
           <!-- <n-select placeholder="请选择所属项目" v-model:value="form.customerId" :options="FormConf.customerOptions" /> -->
           <PartitionSelect v-model="form.customerId" />
         </n-form-item>
-        <n-form-item label-placement="left" label="业务模式" path="businessType">
+        <!-- <n-form-item label-placement="left" label="业务模式" path="businessType"> -->
+        <n-form-item label-placement="left" label="业务模式">
           <n-select placeholder="请选择业务模式" v-model:value="form.businessType" :options="FormConf.businessTypeOptions" />
         </n-form-item>
-        <n-form-item label-placement="left" label="业务节点" path="businessNode">
+        <!-- <n-form-item label-placement="left" label="业务节点" path="businessNode"> -->
+        <n-form-item label-placement="left" label="业务节点" >
           <n-select placeholder="请选择业务节点" v-model:value="form.businessNode" :options="FormConf.businessNodeOptions" />
         </n-form-item>
         <n-form-item label-placement="left" label="结算货币" path="currencyId">
           <CurrencySelect v-model="form.currencyId" />
         </n-form-item>
-        <n-form-item label-placement="left" label="货物类型" path="goodType">
+        <!-- <n-form-item label-placement="left" label="货物类型" path="goodType"> -->
+        <n-form-item label-placement="left" label="货物类型">
           <n-select placeholder="请选择货物类型" v-model:value="form.goodType" :options="FormConf.goodTypeOptions" />
         </n-form-item>
-        <n-form-item label-placement="left" label="尾程服务" path="lastMileService">
+        <!-- <n-form-item label-placement="left" label="尾程服务" path="lastMileService"> -->
+        <n-form-item label-placement="left" label="尾程服务">
           <n-select placeholder="请选择尾程服务" v-model:value="form.lastMileService"
             :options="FormConf.lastMileServiceOptions" />
         </n-form-item>
