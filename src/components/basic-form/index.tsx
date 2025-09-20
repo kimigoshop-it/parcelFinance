@@ -9,12 +9,14 @@ import {
   ElSwitch,
   ElRow,
   ElCol,
-	FormItemRule
+	FormItemRule,
+  ElInputNumber
 } from 'element-plus';
 import { defineComponent, PropType } from 'vue';
 
 export type ComponentType =
   | 'Input'
+  | 'InputNumber'
   | 'Select'
   | 'DatePicker'
   | 'Checkbox'
@@ -26,7 +28,7 @@ export type ComponentType =
 export type FormItem = {
   label: string;
   name: string;
-  component: any | 'Custom';
+  component: ComponentType;
   attrs?: Record<string, any>; // 组件参数
   render?: () => JSX.Element;
   colSpan?: number;
@@ -38,6 +40,8 @@ function getComponent(type: ComponentType) {
   switch (type) {
     case 'Input':
       return ElInput;
+    case 'InputNumber':
+      return ElInputNumber;
     case 'Select':
       return ElSelect;
     case 'DatePicker':
@@ -107,7 +111,7 @@ export default defineComponent({
 
       return (
         <div>
-          <ElForm>
+          <ElForm label-width="auto">
             <ElRow gutter={20}>
               {showingItems.map((item) => {
                 const Comp = getComponent(item.component);

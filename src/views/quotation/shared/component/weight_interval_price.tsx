@@ -14,6 +14,9 @@ export default defineComponent({
     priceType: {
       type: String as PropType<'fixed' | 'p*w'>,
       required: true
+    },
+    label: {
+      type: String
     }
   },
   emits: ['update:modelValue'],
@@ -31,14 +34,17 @@ export default defineComponent({
 
     expose({
       validate: () => {
-        const tasks = formItemRef.value.flat(2).filter(item=> item!==undefined && item!==null).map((item) => item.validate());
+        const tasks = formItemRef.value
+          .flat(2)
+          .filter((item) => item !== undefined && item !== null)
+          .map((item) => item.validate());
 
         return Promise.all(tasks);
       }
     });
     return () => {
       return (
-        <NFormItem label='重量区间固定价'>
+        <NFormItem label={props.label}>
           <div class='flex flex-wrap flex-col gap-1'>
             {partitions.map((item, index) => (
               <div class='inline-flex  gap-2 items-center'>

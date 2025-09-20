@@ -39,7 +39,7 @@
           v-model="form.priceRelatePartitionDtoModels" />
       </div>
 
-      <div class="flex flex-center">
+      <div class="flex flex-center pt-4">
         <n-space>
           <n-button class="w-24" type="primary" @click="submit">保存</n-button>
           <n-button class="w-24" type="primary" @click="cancel" ghost>取消</n-button>

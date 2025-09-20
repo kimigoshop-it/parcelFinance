@@ -68,14 +68,29 @@ export default [
           hide: false,
           keepAlive: true
         }
-      },
+      }
+    ]
+  },
+  {
+    name: 'receivable_statement',
+    path: '/receivable_statement',
+    component: 'basic',
+    meta: {
+      title: '应收账单',
+      localIcon: 'circum_crop',
+      order: 1
+    },
+    children: [
       {
-        name: 'payable_statement_detail',
-        path: '/payable_statement/detail',
+        name: 'receivable_statement_list',
+        path: '/receivable_statement/list',
         component: 'self',
         meta: {
-          title: '应付账单详情',
+          title: '应收账单',
           localIcon: 'dot',
+          requiresAuth: true,
+          hide: false,
+          keepAlive: true
         }
       }
     ]
@@ -180,6 +195,28 @@ export default [
           requiresAuth: true,
           hide: false,
           keepAlive: false
+        }
+      }
+    ]
+  },
+  {
+    name: 'statement',
+    path: '/statement',
+    component: 'basic',
+    meta: {
+      title: '账单管理',
+      localIcon: 'circum_crop',
+      order: 1,
+      hide: true
+    },
+    children: [
+      {
+        name: 'statement_detail',
+        path: '/statement/detail',
+        component: 'self',
+        meta: {
+          title: '账单详情',
+          localIcon: 'dot'
         }
       }
     ]

@@ -2,10 +2,10 @@
   <ThreeSection ref="threeSectionRef" :padding="0">
     <template #header>
       <div class="header flex flex-y-center w-full">
-        <div class="flex-1">应付账单明细</div>
+        <div class="flex-1">{{ `${name}账单明细` }}</div>
         <n-space>
           <n-button type="primary" size="small">导出</n-button>
-          <n-button ghost type="primary" size="small">返回</n-button>
+          <n-button ghost type="primary" size="small" @click="handleBack()">返回</n-button>
         </n-space>
       </div>
     </template>
@@ -25,51 +25,67 @@
           </div>
           <div>账单编号: {{ finance?.bilNumber }}</div>
           <div>账单时间: {{ dayjs(finance?.billTime).format('YYYY-MM-DD HH:mm:ss') }}</div>
-          <div>总数: {{ detailPage?.total }}</div>
+          <div>总数: {{ financePage?.total }}</div>
           <div>总金额: {{ finance?.billAmount }}</div>
         </n-space>
       </section>
 
-      <section class="pb-1 mb3" style="border-bottom: 1px dashed #e0e0e0">对账详情</section>
+      <section id="table_bar" class="pb-1 mb3 flex flex-y-center" style="border-bottom: 1px dashed #e0e0e0">
+        <div class="flex-1">对账详情</div>
+        <n-button type="primary" size="small" @click="formRef?.open()">新增</n-button>
+      </section>
 
-      <!-- <n-data-table :header-height="80" :columns="columns" :data="finance?.financialStatementDetailsList"
-        /> -->
-      <StickyHeadTable v-model:page-index="detailPage.pageIndex" v-model:page-size="detailPage.pageSize" :total="detailPage.total"
-        :columns="columns" :data="finance?.financialStatementDetailsList ?? []" :max-height="tableHeight" />
+      <!-- 表格 -->
+      <StickyHeadTable v-model:page-index="financePage.pageIndex" v-model:page-size="financePage.pageSize"
+        :sticky-top="33"
+        :total="financePage.total" :columns="columns" :data="finance?.financialStatementDetailsList ?? []"
+        :table-height="tableHeight" />
+
+      <!-- 表单 -->
+      <Form ref="formRef" :bill-type="billType" :financial-statement-id="id" />
     </div>
 
     <template #footer>
       <div class="footer flex justify-center items-center">
-        <n-button type="primary" size="small">提交对账单</n-button>
+        <n-button type="primary" size="large">提交对账单</n-button>
       </div>
     </template>
   </ThreeSection>
 </template>
 
 <script lang="tsx" setup>
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { queryFinancialStatementDetails } from '@/service/api/finance';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import ThreeSection from '~/src/components/layout/ThreeSection.vue';
 import dayjs from 'dayjs';
 import { getEnumLabel } from '~/src/typings/business/shared/enum_label_map';
 import { billStatusColors } from '~/src/typings/business/finance';
 import StickyHeadTable from '~/src/components/sticky-head-table/index.vue';
+import Form from './form/form.vue';
+import { isNaN } from 'lodash-es';
 
+const router = useRouter();
 const route = useRoute();
-const id = Number(route.query.id) as number;
+
+const formRef = ref<InstanceType<typeof Form>>();
+
+const id = Number(route.query.id);
+const billType = Number(route.query.billType);
 
 const threeSectionRef = ref<InstanceType<typeof ThreeSection>>();
 const tableHeight = $computed(() => {
-  let tableHeight = (threeSectionRef?.value?.containerHeight ?? 400) - 180;
-
-  console.log("tableHeight", tableHeight);
+  let tableHeight = (threeSectionRef?.value?.containerHeight ?? 400) - 180 - 33;
   return tableHeight;
 });
 
+const name = computed(() => {
+  return getEnumLabel('priceType', isNaN(billType) ? finance?.billType! : billType);
+})
+
 
 let finance = $ref<FinancialStatement>();
-let detailPage = $ref<BaseQueryParams>({
+let financePage = $ref<BaseQueryParams>({
   pageIndex: 1,
   pageSize: 10,
   total: 0,
@@ -111,11 +127,19 @@ const columns = [
 function query() {
   queryFinancialStatementDetails(id).then(res => {
     finance = { ...res, financialStatementDetailsList: res.financialStatementDetailsList.data };
-    for (let i = 0; i < 4; i++) {
-      finance.financialStatementDetailsList.push(...res.financialStatementDetailsList.data);
-    }
-    detailPage.total = res.financialStatementDetailsList.total + 100;
+    // for (let i = 0; i < 4; i++) {
+    //   finance.financialStatementDetailsList.push(...res.financialStatementDetailsList.data);
+    // }
+    financePage.total = res.financialStatementDetailsList.total;
   });
+}
+
+// 返回页面
+function handleBack() {
+  let name = 'payable_statement_list'
+  router.push({
+    name: name
+  })
 }
 
 onMounted(() => {
@@ -146,13 +170,11 @@ onMounted(() => {
   position: relative;
 }
 
-:deep(.n-data-table .n-data-table-thead) {
+#table_bar {
+  background-color: #fff;
   position: sticky;
-  top: 80px;
-  /* 吸顶位置 */
-  z-index: 20;
-  /* 防止被内容盖住 */
-  background: #fff;
-  /* 必须有背景，否则滚动时透明 */
+  top: 0;
+  z-index: 10;
+  height: 80;
 }
 </style>

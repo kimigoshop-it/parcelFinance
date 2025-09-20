@@ -28,7 +28,9 @@ export enum GoodType {
   /** 快递 */
   EXPRESS = 3,
   /** NonH7 */
-  NON_H7 = 4
+  NON_H7 = 4,
+  /** 其他 */
+  OTHER = 100
 }
 
 export enum LastMileService {

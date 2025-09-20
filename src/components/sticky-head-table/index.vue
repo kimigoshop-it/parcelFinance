@@ -1,44 +1,50 @@
 <template>
   <!-- 表头 -->
-  <table class="w-full border-collapse">
-    <thead class="sticky_header bg-gray-100">
-      <tr>
-        <th v-for="col in columns" :key="col.key" class="border p-2 text-left font-medium">
-          {{ col.title }}
-        </th>
-      </tr>
-    </thead>
+  <div>
+    <div :style="{ height: tableHeight + 'px' }">
+      <table class="w-full border-collapse">
+        <thead class="sticky_header bg-gray-100" :style="{ top: (stickyTop ?? 0) + 'px'}">
+          <tr>
+            <th v-for="col in columns" :key="col.key" class="border p-2 text-left font-medium">
+              {{ col.title }}
+            </th>
+          </tr>
+        </thead>
 
-    <!-- 表体 -->
-    <tbody>
-      <tr v-for="(row, rowIndex) in data" :key="rowIndex" class="hover:bg-gray-50">
-        <td v-for="col in columns" :key="col.key" class="border p-2">
-          <!-- 支持插槽覆盖单元格 -->
-          <slot :name="`cell-${col.key}`" :row="row" :value="row[col.key]">
-            {{ row[col.key] }}
-          </slot>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        <!-- 表体 -->
+        <tbody>
+          <tr v-for="(row, rowIndex) in data" :key="rowIndex" class="hover:bg-gray-50">
+            <td v-for="col in columns" :key="col.key" class="border p-2">
+              <!-- 支持插槽覆盖单元格 -->
+              <slot :name="`cell-${col.key}`" :row="row" :value="row[col.key]">
+                {{ row[col.key] }}
+              </slot>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <!-- 分页 -->
-  <div class="pagination flex justify-end items-center py-2">
-    <n-pagination v-model:page="pageIndex" v-model:page-size="pageSize" :item-count="total" show-size-picker
-      show-quick-jumper :page-sizes="[10, 20, 50, 100]" />
+    <!-- 分页 -->
+    <div class="pagination flex justify-end items-center py-2">
+      <n-pagination v-model:page="pageIndex" v-model:page-size="pageSize" :item-count="total" show-size-picker
+        show-quick-jumper :page-sizes="[10, 20, 50, 100]" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { TableColumn } from 'naive-ui/es/data-table/src/interface';
+import { TableBaseColumn } from 'naive-ui/es/data-table/src/interface';
 
 const props = defineProps<{
-  columns: TableColumn[];
+  columns: TableBaseColumn[];
   data: any[];
   pageIndex: number;
   pageSize: number;
   total: number;
+  tableHeight: number;
+  stickyTop?: number;
 }>();
 
 
@@ -108,7 +114,6 @@ tr:last-child td {
 
 .sticky_header {
   position: sticky;
-  top: 0;
   z-index: 20;
   background: #fff;
 }

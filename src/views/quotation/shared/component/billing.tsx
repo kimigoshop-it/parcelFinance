@@ -1,5 +1,5 @@
 import { defineComponent, PropType, ref, watch } from 'vue';
-import { BillingMethod } from '../model/price';
+import { BillingMethod, getPriceEnumLabel } from '../model/price';
 import FixedPrice from './fixed_price';
 import WeightIntervalPrice from './weight_interval_price';
 import AreaIntervalPrice from './area_interval_price';
@@ -70,7 +70,7 @@ export default defineComponent({
       }
 
       const Comp = formMap[props.billingMethod];
-      return isFixedPrice(props.billingMethod) ? (
+      return (
         <div>
           <Comp
             modelValue={model}
@@ -78,20 +78,9 @@ export default defineComponent({
               model = value;
             }}
             customerId={props.customerId}
-            priceType='fixed'
             ref={compRef}
-          />
-        </div>
-      ) : (
-        <div>
-          <Comp
-            modelValue={model}
-            onUpdate:modelValue={(value) => {
-              model = value;
-            }}
-            customerId={props.customerId}
-            priceType='p*w'
-            ref={compRef}
+            priceType={isFixedPrice(props.billingMethod) ? 'fixed' : 'p*w'}
+            label={getPriceEnumLabel('billingMethod', props.billingMethod)}
           />
         </div>
       );

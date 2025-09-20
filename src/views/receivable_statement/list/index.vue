@@ -1,5 +1,5 @@
 <template>
-  <QueryPage :billType="PriceType.RECEIVABLE" />
+  <QueryPage :billType="PriceType.PAYABLE" />
 </template>
 
 <script lang="tsx" setup>

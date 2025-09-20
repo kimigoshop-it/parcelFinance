@@ -3,7 +3,6 @@ import { defineComponent, nextTick, PropType, ref, watch } from 'vue';
 import { Minus, Plus } from '@element-plus/icons-vue';
 import { PartitionWeightPrice } from '../model/price';
 import PartitionSelect from '@/components/business/PartitionSelect.vue';
-import { mode } from 'crypto-js';
 import { endWeightRule, notNullRule, positiveNumberRule } from '../model/rules';
 
 export default defineComponent({
@@ -20,6 +19,9 @@ export default defineComponent({
     customerId: {
       type: [Number, null] as PropType<number | null>,
       required: true
+    },
+    label: {
+      type: String
     }
   },
   emits: ['update:modelValue'],
@@ -55,9 +57,17 @@ export default defineComponent({
     const validate = () => {
       console.log('validate', partitionFormItemRef.value, weightFormItemRef.value, priceFormItemRef.value);
       const tasks = [
-        ...partitionFormItemRef.value.filter(item=> item!==undefined && item!==null).map((item) => item.validate()),
-        ...weightFormItemRef.value.flat(2).filter(item=> item!==undefined && item!==null).map((item) => item.validate()),
-        ...priceFormItemRef.value.flat(2).filter(item=> item!==undefined && item!==null).map((item) => item.validate())
+        ...partitionFormItemRef.value
+          .filter((item) => item !== undefined && item !== null)
+          .map((item) => item.validate()),
+        ...weightFormItemRef.value
+          .flat(2)
+          .filter((item) => item !== undefined && item !== null)
+          .map((item) => item.validate()),
+        ...priceFormItemRef.value
+          .flat(2)
+          .filter((item) => item !== undefined && item !== null)
+          .map((item) => item.validate())
       ];
 
       return Promise.all(tasks);
@@ -69,6 +79,7 @@ export default defineComponent({
 
     return () => (
       <div>
+        <div class='pb-2'>{props.label}</div>
         <NDataTable
           bordered={true}
           singleLine={false}

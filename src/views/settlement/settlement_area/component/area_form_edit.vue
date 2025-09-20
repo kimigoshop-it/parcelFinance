@@ -13,8 +13,6 @@ import { queryPartitionDetailById, queryPartitionNoProvince, queryPartitionNoCit
 import { CountryConfig, Partition, PartitionType } from '../model';
 import BusinessStore from '@/store/modules/business';
 import { VirtList } from 'vue-virt-list'
-import { range } from 'lodash';
-import { NButton } from 'naive-ui';
 
 const props = defineProps<{
   country: ICountryConfig,
@@ -165,8 +163,13 @@ const formItems = $computed<FormItem[]>(() => {
   const item = (city: City, index: number) => {
     const availableCities = partition.getAvailableCities(city.provinceId!);
     return <div class="flex gap-2 items-center w-full py-2.5">
-      <ElSelect class="flex-1" v-model={city.provinceId} onUpdate:modelValue={(value) => {
+      <ElSelect class="flex-1" modelValue={city.provinceId} onUpdate:modelValue={(value) => {
+        let ifSame = value === city.provinceId;
         city.provinceId = value;
+        if (!ifSame) {
+          city.cityId = null;
+          city.cityName = null;
+        }
       }}>
         {availableCityProvinces.map((p) => {
           return <ElOption value={p.provinceId!} label={p.provinceName ?? ""} />

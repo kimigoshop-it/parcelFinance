@@ -21,6 +21,9 @@ export default defineComponent({
     customerId: {
       type: [Number, null] as PropType<number | null>,
       required: true
+    },
+    label: {
+      type: String
     }
   },
   emits: ['update:modelValue'],
@@ -50,7 +53,7 @@ export default defineComponent({
 
     return () => {
       return (
-        <NFormItem label='重量区间固定价'>
+        <NFormItem label={props.label}>
           <div class='flex flex-wrap w-lg flex-col gap-1'>
             {partitions.map((item, index) => (
               <div class='inline-flex  gap-2 items-center'>

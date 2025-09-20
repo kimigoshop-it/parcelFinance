@@ -1,6 +1,6 @@
 import BasicForm, { FormItem } from '@/components/basic-form';
 import { NModal, NScrollbar } from 'naive-ui';
-import { PropType, defineComponent } from 'vue';
+import { PropType, SlotsType, defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'DialogForm',
@@ -44,10 +44,22 @@ export default defineComponent({
     maxHeight: {
       type: String,
       default: '500px'
+    },
+    positiveText: {
+      type: String,
+      required: false,
+      default: '确定'
+    },
+    negativeText: {
+      type: String,
+      required: false
     }
   },
   emits: ['onUpdate:modelValue'],
-  slots: ['header', 'footer'],
+  slots: Object as SlotsType<{
+    header: {};
+    footer: {};
+  }>,
   setup(props, { emit, slots }) {
     return () => (
       <NModal
@@ -57,14 +69,15 @@ export default defineComponent({
         title={props.title}
         closable={true}
         onEsc={props.onClose}
-        positiveText='确定'
+        positiveText={props.positiveText}
+        negativeText={props.negativeText}
         onPositiveClick={props.onPositiveClick}
         onNegativeClick={props.onNegativeClick}
         style={{
           width: props.width
         }}
       >
-        {slots?.header?.()}
+        {slots?.header?.({})}
         <div style={{ maxHeight: props.maxHeight, padding: '0 10px', overflow: 'auto' }}>
           <BasicForm
             formItems={props.formItems}
@@ -73,7 +86,7 @@ export default defineComponent({
             onUpdate:modelValue={(value) => emit('onUpdate:modelValue', value)}
           />
         </div>
-        {slots.footer?.()}
+        {slots.footer?.({})}
       </NModal>
     );
   }
