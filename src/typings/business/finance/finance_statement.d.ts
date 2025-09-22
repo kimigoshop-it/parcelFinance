@@ -24,6 +24,9 @@ declare interface FinancialStatement {
   /** 对账类型（0：应付，1：应收） */
   billType?: number | null;
 
+  /** 单号 */
+  businessNumber?: string | null;
+
   /** 开始账单时间 */
   billTime?: string | Date | null;
 
