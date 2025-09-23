@@ -26,7 +26,7 @@ const close = () => {
 
 let loading = $ref(false);
 
-const goodTypeOptions = [
+const goodTypeOptionsPay = [
   {
     label: '普货',
     value: GoodType.NORMAL
@@ -49,6 +49,16 @@ const goodTypeOptions = [
   }
 ];
 
+const goodTypeOptionsReceivable = [
+  {
+    label: '普货',
+    value: GoodType.NORMAL
+  },
+  {
+    label: '其他',
+    value: GoodType.OTHER
+  }
+]
 
 const formItems = $computed<FormItem[]>(() => {
   const goodType: FormItem = {
@@ -67,7 +77,13 @@ const formItems = $computed<FormItem[]>(() => {
     }
   }
 
-  goodType.attrs!.options = goodTypeOptions as any;
+  if (props.billType === PriceType.PAYABLE) {
+    goodType.attrs!.options = goodTypeOptionsPay as any;
+  }
+
+  if (props.billType === PriceType.RECEIVABLE) {
+    goodType.attrs!.options = goodTypeOptionsReceivable as any;
+  }
 
   const enCode: FormItem =
   {
