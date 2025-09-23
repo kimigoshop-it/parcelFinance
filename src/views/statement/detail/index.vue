@@ -20,7 +20,8 @@
             <div class=flex-1>所属项目: {{ finance?.customerName }}</div>
             <n-space>
               <div>币种: {{ finance?.currency }}</div>
-              <div :style="{ color: billStatusColors[finance?.billStatus!] }">{{ getFinanceTag('billStatusPayable', finance?.billStatus!) }}</div>
+              <div :style="{ color: billStatusColors[finance?.billStatus!] }">{{ getFinanceTag('billStatusPayable',
+                finance?.billStatus!) }}</div>
             </n-space>
           </div>
           <div>账单编号: {{ finance?.bilNumber }}</div>
@@ -37,12 +38,11 @@
 
       <!-- 表格 -->
       <StickyHeadTable v-model:page-index="financePage.pageIndex" v-model:page-size="financePage.pageSize"
-        :sticky-top="33"
-        :total="financePage.total" :columns="columns" :data="finance?.financialStatementDetailsList ?? []"
-        :table-height="tableHeight" />
+        :sticky-top="33" :total="financePage.total" :columns="columns"
+        :data="finance?.financialStatementDetailsList ?? []" :table-height="tableHeight" />
 
       <!-- 表单 -->
-      <Form ref="formRef" :bill-type="billType" :financial-statement-id="id" />
+      <Form ref="formRef" :bill-type="billType" :financial-statement-id="id" @success="query" />
     </div>
 
     <template #footer>
