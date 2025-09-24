@@ -39,10 +39,13 @@
       <!-- 表格 -->
       <StickyHeadTable v-model:page-index="financePage.pageIndex" v-model:page-size="financePage.pageSize"
         :sticky-top="33" :total="financePage.total" :columns="columns"
-        :data="finance?.financialStatementDetailsList ?? []" :table-height="tableHeight" />
+        :data="finance?.financialStatementDetailsList ?? []" :table-height="tableHeight" @update:page-index="query"
+        @update:page-size="query" />
 
       <!-- 表单 -->
       <Form ref="formRef" :bill-type="billType" :financial-statement-id="id" @success="query" />
+
+      <DelForm ref="delFormRef" :financial-statement-id="id" @success="query" />
     </div>
 
     <template #footer>
@@ -63,12 +66,15 @@ import { getEnumLabel } from '~/src/typings/business/shared/enum_label_map';
 import { billStatusColors, getFinanceTag } from '~/src/typings/business/finance';
 import StickyHeadTable from '~/src/components/sticky-head-table/index.vue';
 import Form from './form/form.vue';
+import DelForm from './form/delForm.vue';
 import { isNaN } from 'lodash-es';
+import { PriceType } from '~/src/typings/business/shared';
 
 const router = useRouter();
 const route = useRoute();
 
 const formRef = ref<InstanceType<typeof Form>>();
+const delFormRef = ref<InstanceType<typeof DelForm>>();
 
 const id = Number(route.query.id);
 const billType = Number(route.query.billType);
@@ -98,6 +104,14 @@ const columns = $computed(() => {
       title: '账单明细编号',
       key: 'billNumber',
       width: '260px',
+      render: ({ row }: { row: FinancialStatementDetails }) => {
+        return <div class='text-blue-500 cursor-pointer' onClick={() => {
+          router.push({
+            name: 'statement_lading_detail',
+            query: { id: row.id }
+          })
+        }}>{row.billNumber}</div>
+      }
     },
     {
       title: '单号',
@@ -128,14 +142,15 @@ const columns = $computed(() => {
     {
       title: '操作',
       key: 'action',
-      render: (row: FinancialStatementDetails) => {
+      render: ({ row }: { row: FinancialStatementDetails }) => {
         return <n-button type="primary" size="small" onClick={() => {
+          delFormRef.value?.openDialog(row.goodType!, row.businessNumber!, row.id, finance?.billNode !== '清关');
         }}>删除</n-button>
       }
     }
   ]
 
-  if ((finance?.billNode?? '') === '清关') {
+  if ((finance?.billNode ?? '') === '清关') {
     return col.filter(item => item.key !== 'goodType' && item.key !== 'lastMileService');
   }
 
@@ -144,7 +159,7 @@ const columns = $computed(() => {
 
 // 查询函数
 function query() {
-  queryFinancialStatementDetails(id).then(res => {
+  queryFinancialStatementDetails(id, financePage).then(res => {
     finance = { ...res, financialStatementDetailsList: res.financialStatementDetailsList.data };
     // for (let i = 0; i < 4; i++) {
     //   finance.financialStatementDetailsList.push(...res.financialStatementDetailsList.data);
@@ -155,7 +170,10 @@ function query() {
 
 // 返回页面
 function handleBack() {
-  let name = 'payable_statement_list'
+  let namePayable = 'payable_statement_list'
+  let nameReceivable = 'receivable_statement_list'
+  let name = billType == PriceType.PAYABLE ? namePayable : nameReceivable
+
   router.push({
     name: name
   })

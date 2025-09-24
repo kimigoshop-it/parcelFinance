@@ -40,10 +40,10 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { TableBaseColumn } from 'naive-ui/es/data-table/src/interface';
+import { TableBaseColumn, TableColumn } from 'naive-ui/es/data-table/src/interface';
 
 const props = defineProps<{
-  columns: TableBaseColumn[];
+  columns: (TableBaseColumn & TableColumn)[];
   data: any[];
   pageIndex: number;
   pageSize: number;

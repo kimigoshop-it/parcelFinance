@@ -216,7 +216,18 @@ export default [
         component: 'self',
         meta: {
           title: '账单详情',
-          localIcon: 'dot'
+          localIcon: 'dot',
+          hide: true,
+        }
+      },
+      {
+        name: 'statement_lading_detail',
+        path: '/statement/lading_detail',
+        component: 'self',
+        meta: {
+          title: '提单明细',
+          localIcon: 'dot',
+          hide: true,
         }
       }
     ]

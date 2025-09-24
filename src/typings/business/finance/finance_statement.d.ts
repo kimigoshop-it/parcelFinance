@@ -50,8 +50,11 @@ declare interface FinancialStatement {
 }
 
 declare interface FinancialStatementDetails {
+  /** 主键Id */
+  id: number
+
   /** 账单编号 */
-  bilNumber?: string | null;
+  billNumber?: string | null;
 
   /** 计费单号 */
   billCdoe?: string | null;

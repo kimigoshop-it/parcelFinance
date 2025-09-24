@@ -18,12 +18,13 @@ export const queryFinancialStatement = (data: any) => {
  * @param id 账单ID
  * @returns 账单详情
  */
-export const queryFinancialStatementDetails = (id: number) => {
+export const queryFinancialStatementDetails = (id: number, filters: BaseQueryParams) => {
   return requestRaw<FinancialStatementView>({
     url: '/api/FinancialStatement/QueryFinancialStatementDetails',
     method: 'POST',
     data: {
-      id
+      id,
+      ...filters
     }
   });
 };

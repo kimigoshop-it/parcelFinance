@@ -53,6 +53,10 @@ export default defineComponent({
     negativeText: {
       type: String,
       required: false
+    },
+    showLabel: {
+      type: Boolean,
+      default: true
     }
   },
   emits: ['onUpdate:modelValue'],
@@ -82,6 +86,7 @@ export default defineComponent({
           <BasicForm
             formItems={props.formItems}
             columns={props.columns}
+            showLabel={props.showLabel}
             modelValue={props.modelValue}
             onUpdate:modelValue={(value) => emit('onUpdate:modelValue', value)}
           />
