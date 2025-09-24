@@ -56,3 +56,19 @@ export const addPayFinancialStatementDetail = (data: any) => {
     showMsg: true
   });
 };
+
+/**
+ * 查询提单纬度下，详情列表
+ */
+export const queryLadingDetails = (
+  data: {
+    financialStatementDetailId: number;
+    orderNumber?: string;
+  } & BaseQueryParams
+) => {
+  return requestRaw<FinancialStatementView>({
+    url: '/api/FinancialStatement/QueryFinancialProductPlanTemuDetailByProductPlanTemuNumber',
+    method: 'POST',
+    data: data
+  });
+};

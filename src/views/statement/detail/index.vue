@@ -108,7 +108,7 @@ const columns = $computed(() => {
         return <div class='text-blue-500 cursor-pointer' onClick={() => {
           router.push({
             name: 'statement_lading_detail',
-            query: { id: row.id }
+            query: { id: row.id, orderNumber: row.businessNumber }
           })
         }}>{row.billNumber}</div>
       }
