@@ -91,37 +91,56 @@ let financePage = $ref<BaseQueryParams>({
   total: 0,
 });
 
-const columns = [
-  {
-    title: '账单明细编号',
-    key: 'billNumber',
-  },
-  {
-    title: '单号',
-    key: 'businessNumber',
-  },
-  {
-    title: '计费日期',
-    key: 'billTime',
-  },
-  {
-    title: '计费重量',
-    key: 'billWeight',
-  },
-  {
-    title: '货物类型',
-    key: 'goodType',
-  },
-  {
-    title: '配送方式',
-    key: 'lastMileService',
-    render: (row: FinancialStatementDetails) => getEnumLabel('lastMileService', row.lastMileService!),
-  },
-  {
-    title: '费用',
-    key: 'billAmount',
+const columns = $computed(() => {
+  const col = [
+
+    {
+      title: '账单明细编号',
+      key: 'billNumber',
+      width: '260px',
+    },
+    {
+      title: '单号',
+      key: 'businessNumber',
+    },
+    {
+      title: '计费日期',
+      key: 'billTime',
+    },
+    {
+      title: '计费重量',
+      key: 'billWeight',
+    },
+    {
+      title: '货物类型',
+      key: 'goodType',
+      render: (row: FinancialStatementDetails) => getEnumLabel('goodType', row.goodType!),
+    },
+    {
+      title: '配送方式',
+      key: 'lastMileService',
+      render: (row: FinancialStatementDetails) => getFinanceTag('deliveryType', row.lastMileService!),
+    },
+    {
+      title: '费用',
+      key: 'billAmount',
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (row: FinancialStatementDetails) => {
+        return <n-button type="primary" size="small" onClick={() => {
+        }}>删除</n-button>
+      }
+    }
+  ]
+
+  if ((finance?.billNode?? '') === '清关') {
+    return col.filter(item => item.key !== 'goodType' && item.key !== 'lastMileService');
   }
-];
+
+  return col;
+})
 
 // 查询函数
 function query() {

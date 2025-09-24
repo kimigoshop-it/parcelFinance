@@ -3,22 +3,27 @@
   <div>
     <div :style="{ height: tableHeight + 'px' }">
       <table class="w-full border-collapse">
-        <thead class="sticky_header bg-gray-100" :style="{ top: (stickyTop ?? 0) + 'px'}">
+        <colgroup>
+          <col v-for="col in columns" :key="col.key"
+            :style="{ width: col.width ? (typeof col.width === 'number' ? col.width + 'px' : col.width) : 'auto' }" />
+        </colgroup>
+
+        <thead class="sticky_header bg-gray-100" :style="{ top: (stickyTop ?? 0) + 'px' }">
           <tr>
-            <th v-for="col in columns" :key="col.key" class="border p-2 text-left font-medium">
+            <th v-for="col in columns" :key="col.key" class="p-2 text-left font-medium">
               {{ col.title }}
             </th>
           </tr>
         </thead>
-
-        <!-- 表体 -->
         <tbody>
           <tr v-for="(row, rowIndex) in data" :key="rowIndex" class="hover:bg-gray-50">
-            <td v-for="col in columns" :key="col.key" class="border p-2">
-              <!-- 支持插槽覆盖单元格 -->
-              <slot :name="`cell-${col.key}`" :row="row" :value="row[col.key]">
+            <td v-for="col in columns" :key="col.key" class="p-2">
+              <div v-if="col.render === undefined">
                 {{ row[col.key] }}
-              </slot>
+              </div>
+              <div v-else>
+                <component :is="col.render" :row="row" :value="row[col.key]" />
+              </div>
             </td>
           </tr>
         </tbody>
@@ -76,46 +81,47 @@ const pageSize = $computed({
 
 <style scoped>
 table {
-  position: relative;
-  border-collapse: separate;
-  border-spacing: 0;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  /* 保持列宽固定 */
+  font-size: 14px;
+  color: #303133;
 }
-
-/* tr:nth-child(even) {
-  background-color: lightgray;
-}
-
-th {
-  background-color: lightblue;
-  position: sticky;
-  top: 0;
-} */
 
 th,
 td {
-  border-color: black;
-  border-style: solid;
-  border-width: 0 0 1px 1px;
-  padding: 10px 20px;
-}
-
-th {
-  border-top-width: 1px;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ebeef5;
+  /* 仿 element-plus 边框颜色 */
+  border-right: 1px solid #ebeef5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 th:last-child,
 td:last-child {
-  border-right-width: 1px;
+  border-right: none;
 }
 
-tr:last-child td {
-  border-bottom-width: 1px;
+tr:hover td {
+  background-color: #f5f7fa;
+  /* 仿 element-plus hover 行颜色 */
+}
+
+th {
+  background-color: #f5f7fa;
+  /* 表头浅灰 */
+  font-weight: 600;
+  border-bottom: 1px solid #dcdfe6;
 }
 
 .sticky_header {
   position: sticky;
+  top: 0;
   z-index: 20;
-  background: #fff;
 }
 
 .pagination {

@@ -19,8 +19,7 @@
       <!-- 底部分页固定 -->
       <div id="pagination-container" class="flex-none mt-2 flex justify-end items-center pt-2">
         <n-pagination v-model:page="filter.pageIndex" :page-size="filter.pageSize" :item-count="total"
-          @update:page="refresh" @update:page-size="refresh"
-        />
+          @update:page="refresh" @update:page-size="refresh" />
       </div>
     </n-card>
   </div>
@@ -174,6 +173,7 @@ const refresh = (_: any) => {
   queryPriceList(filter).then((res) => {
     data = res.data ?? [];
     total = res.total;
+    console.log('dta', data);
   });
 };
 
