@@ -8,11 +8,31 @@
 
     <!-- 主体部分 -->
     <div id="bill_content" class="m-3 flex-1">
+      <section style="border-bottom: 1px solid #e0e0e0" class="pb-3 mb3">
+        <n-space vertical>
+          <div class=flex-1>订单数量: {{ ladingBill.orderCount }}</div>
+          <div class=flex-1>批次号: {{ ladingBill.batchBillNo }}</div>
+
+          <div class="flex flex-y-center">
+            <n-space>
+              <div>计费重量: {{ ladingBill.billWeight }}</div>
+              <div>总金额: {{ ladingBill.billAmount }}</div>
+            </n-space>
+          </div>
+        </n-space>
+      </section>
+
+      <section id="table_bar" class="pb-1 mb3 flex flex-y-center" style="border-bottom: 1px dashed #e0e0e0">
+        <div class="flex-1">对账详情</div>
+        <n-button type="primary" size="small" @click="formRef?.open()">新增</n-button>
+      </section>
+
       <!-- 表格 -->
       <StickyHeadTable ref="threeSectionRef" v-model:page-index="ladingPage.pageIndex"
-        v-model:page-size="ladingPage.pageSize" :sticky-top="33" :total="ladingPage.total" :columns="columns" :data="[]"
-        :table-height="tableHeight" @update:page-index="query" @update:page-size="query" />
+        v-model:page-size="ladingPage.pageSize" :sticky-top="33" :total="ladingPage.total" :columns="columns"
+        :data="ladingBill.details" :table-height="tableHeight" @update:page-index="query" @update:page-size="query" />
 
+      <Form ref="formRef" :financial-statement-id="id" :bill-type="1" @success="query" />
       <DelForm ref="delFormRef" :financial-statement-id="id" @success="query" />
     </div>
   </ThreeSection>
@@ -21,7 +41,8 @@
 <script setup lang="tsx">
 import ThreeSection from '~/src/components/layout/ThreeSection.vue';
 import StickyHeadTable from '~/src/components/sticky-head-table/index.vue';
-import DelForm from '../detail/form/delForm.vue';
+import Form from './form/form.vue';
+import DelForm from './form/delForm.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import { getEnumLabel } from '~/src/typings/business/shared/enum_label_map';
@@ -36,59 +57,38 @@ const id = Number(route.query.id);
 const orderNumber = route.query.orderNumber as string;
 
 const threeSectionRef = ref<InstanceType<typeof ThreeSection>>();
+const formRef = ref<InstanceType<typeof Form>>();
 const delFormRef = ref<InstanceType<typeof DelForm>>();
 const tableHeight = $computed(() => {
-  let tableHeight = (threeSectionRef?.value?.containerHeight ?? 400) - 180 - 33;
+  let tableHeight = threeSectionRef?.value?.containerHeight! - 80 - 33 - 44;
   return tableHeight;
 });
 
 const columns = $computed<TableColumn[]>(() => {
   const col = [
     {
-      title: '账单明细编号',
+      title: '账单编号',
       key: 'billNumber',
       width: '260px',
-      render: ({ row }: { row: FinancialStatementDetails }) => {
-        return <div class='text-blue-500 cursor-pointer' onClick={() => {
-          router.push({
-            name: 'statement_lading_detail',
-            query: { id: row.id }
-          })
-        }}> {row.billNumber} </div>
-      }
     },
     {
-      title: '单号',
-      key: 'businessNumber',
-    },
-    {
-      title: '计费日期',
-      key: 'billTime',
-    },
-    {
-      title: '计费重量',
+      title: '总重量',
       key: 'billWeight',
     },
     {
-      title: '货物类型',
-      key: 'goodType',
-      render: (row: FinancialStatementDetails) => getEnumLabel('goodType', row.goodType!),
-    },
-    {
-      title: '配送方式',
-      key: 'lastMileService',
-      render: (row: FinancialStatementDetails) => getFinanceTag('deliveryType', row.lastMileService!),
-    },
-    {
-      title: '费用',
+      title: '金额',
       key: 'billAmount',
+    },
+    {
+      title: '计费时间',
+      key: 'billTime',
     },
     {
       title: '操作',
       key: 'action',
       render: ({ row }: { row: FinancialStatementDetails }) => {
         return <n-button type="primary" size="small" onClick={() => {
-          {/* delFormRef.value?.openDialog(row.goodType!, row.businessNumber!, row.id, finance?.billNode !== '清关'); */ }
+          delFormRef.value?.openDialog(row.goodType!, row.businessNumber!, row.id);
         }
         }> 删除 </n-button>
       }
@@ -108,13 +108,20 @@ const ladingPage = $ref<BaseQueryParams>({
   total: 0,
 });
 
+const ladingBill = $ref<LadingDetails>({} as any);
+
 const query = () => {
   queryLadingDetails({
     financialStatementDetailId: id,
     pageIndex: ladingPage.pageIndex,
     pageSize: ladingPage.pageSize,
   }).then(res => {
-    console.log(res);
+    ladingBill.orderCount = res.orderCount;
+    ladingBill.billWeight = res.billWeight;
+    ladingBill.billAmount = res.billAmount;
+    ladingBill.batchBillNo = res.batchBillNo;
+    ladingBill.details = res.result.data;
+    ladingPage.total = res.result.total;
   })
 }
 
@@ -131,5 +138,20 @@ onMounted(() => {
   height: 80px;
   background-color: #fff;
   padding: 0 25px;
+}
+
+#bill_content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  position: relative;
+}
+
+#table_bar {
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 80;
 }
 </style>

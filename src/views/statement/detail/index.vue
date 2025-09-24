@@ -136,7 +136,7 @@ const columns = $computed(() => {
       render: (row: FinancialStatementDetails) => getFinanceTag('deliveryType', row.lastMileService!),
     },
     {
-      title: '费用',
+      title: '金额',
       key: 'billAmount',
     },
     {

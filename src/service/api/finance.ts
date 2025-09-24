@@ -66,7 +66,7 @@ export const queryLadingDetails = (
     orderNumber?: string;
   } & BaseQueryParams
 ) => {
-  return requestRaw<FinancialStatementView>({
+  return requestRaw<LadingDetailsView>({
     url: '/api/FinancialStatement/QueryFinancialProductPlanTemuDetailByProductPlanTemuNumber',
     method: 'POST',
     data: data

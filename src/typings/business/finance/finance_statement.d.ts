@@ -51,7 +51,7 @@ declare interface FinancialStatement {
 
 declare interface FinancialStatementDetails {
   /** 主键Id */
-  id: number
+  id: number;
 
   /** 账单编号 */
   billNumber?: string | null;
@@ -88,4 +88,16 @@ declare interface FinancialStatementDetails {
 
   /** 对账类型（0：应付，1：应收） */
   billType?: number | null;
+}
+
+declare interface LadingDetails {
+  orderCount: number;
+  billWeight: number;
+  billAmount: number;
+  batchBillNo: string;
+  details: FinancialStatementDetails[];
+}
+
+declare interface LadingDetailsView extends LadingDetails {
+  result: Response<FinancialStatementDetails[]>;
 }
