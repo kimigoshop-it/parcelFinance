@@ -2,7 +2,8 @@
   <ThreeSection ref="threeSectionRef" :padding="0">
     <template #header>
       <div class="header flex flex-y-center w-full">
-        提单明细
+        <div class='flex-1'>提单明细</div>
+        <n-button ghost type="primary" size="small" @click="handleBack()">返回</n-button>
       </div>
     </template>
 
@@ -51,7 +52,9 @@ import { queryLadingDetails } from '~/src/service/api/finance';
 const route = useRoute();
 const router = useRouter();
 
+const detailId = Number(route.query.detailId);
 const id = Number(route.query.id);
+const billType = Number(route.query.billType);
 
 const threeSectionRef = ref<InstanceType<typeof ThreeSection>>();
 const formRef = ref<InstanceType<typeof Form>>();
@@ -119,6 +122,17 @@ const query = () => {
     ladingBill.batchBillNo = res.batchBillNo;
     ladingBill.details = res.result.data;
     ladingPage.total = res.result.total;
+  })
+}
+
+// 返回页面
+function handleBack() {
+  router.push({
+    name: 'statement_detail',
+    query: {
+      id: detailId,
+      billType: billType
+    }
   })
 }
 
