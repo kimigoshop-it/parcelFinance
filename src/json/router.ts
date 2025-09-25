@@ -217,7 +217,7 @@ export default [
         meta: {
           title: '账单详情',
           localIcon: 'dot',
-          hide: true,
+          hide: true
         }
       },
       {
@@ -227,7 +227,31 @@ export default [
         meta: {
           title: '提单明细',
           localIcon: 'dot',
-          hide: true,
+          hide: true
+        }
+      }
+    ]
+  },
+  {
+    name: 'settings',
+    path: '/settings',
+    component: 'basic',
+    meta: {
+      title: '系统设置',
+      localIcon: 'circum_crop',
+      order: 1
+    },
+    children: [
+      {
+        name: 'settings_export',
+        path: '/settings/export',
+        component: 'self',
+        meta: {
+          title: '导出记录',
+          localIcon: 'dot',
+          requiresAuth: true,
+          hide: false,
+          keepAlive: false
         }
       }
     ]

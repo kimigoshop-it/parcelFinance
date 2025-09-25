@@ -45,7 +45,7 @@
       <!-- 表单 -->
       <Form ref="formRef" :bill-type="billType" :financial-statement-id="id" :is-lading="isLading" @success="query" />
 
-      <DelForm ref="delFormRef" :financial-statement-id="id" :is-lading="isLading" @success="query"/>
+      <DelForm ref="delFormRef" :financial-statement-id="id" :is-lading="isLading" @success="query" />
     </div>
 
     <template #footer>
@@ -131,12 +131,13 @@ const columns = $computed(() => {
     {
       title: '货物类型',
       key: 'goodType',
-      render: (row: FinancialStatementDetails) => getEnumLabel('goodType', row.goodType!),
+      // render: (row: FinancialStatementDetails) => getEnumLabel('goodType', row.goodType!),
+      render: ({ row }) => getEnumLabel('goodType', row.goodType!),
     },
     {
       title: '配送方式',
       key: 'lastMileService',
-      render: (row: FinancialStatementDetails) => getFinanceTag('deliveryType', row.lastMileService!),
+      render: ({ row }) => getFinanceTag('deliveryType', row.lastMileService!),
     },
     {
       title: '金额',
