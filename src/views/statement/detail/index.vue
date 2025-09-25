@@ -50,7 +50,13 @@
 
     <template #footer>
       <div class="footer flex justify-center items-center">
-        <n-button type="primary" size="large">提交对账单</n-button>
+        <n-dialog-provider>
+          <n-space>
+            <n-button type="primary" size="large" @click="() => dialogConfirm('submit')">{{ confirmText }}</n-button>
+            <n-button v-if="finance?.billStatus === BillStatus.WAITING_FOR_CONFIRM" type="primary" ghost size="large"
+              @click="() => dialogConfirm('rollback')">重新对账</n-button>
+          </n-space>
+        </n-dialog-provider>
       </div>
     </template>
   </ThreeSection>
@@ -58,20 +64,23 @@
 
 <script lang="tsx" setup>
 import { useRoute, useRouter } from 'vue-router';
-import { queryFinancialStatementDetails } from '@/service/api/finance';
+import { queryFinancialStatementDetails, updateFinancialStatementStatus } from '@/service/api/finance';
 import { computed, onMounted, ref } from 'vue';
 import ThreeSection from '~/src/components/layout/ThreeSection.vue';
 import dayjs from 'dayjs';
 import { getEnumLabel } from '~/src/typings/business/shared/enum_label_map';
-import { billStatusColors, getFinanceTag } from '~/src/typings/business/finance';
+import { BillStatus, billStatusColors, getFinanceTag } from '~/src/typings/business/finance';
 import StickyHeadTable from '~/src/components/sticky-head-table/index.vue';
 import Form from './form/form.vue';
 import DelForm from './form/delForm.vue';
 import { isNaN } from 'lodash-es';
 import { PriceType } from '~/src/typings/business/shared';
+import { useDialog } from 'naive-ui'
+
 
 const router = useRouter();
 const route = useRoute();
+const dialog = useDialog();
 
 const formRef = ref<InstanceType<typeof Form>>();
 const delFormRef = ref<InstanceType<typeof DelForm>>();
@@ -184,6 +193,80 @@ function handleBack() {
 
   router.push({
     name: name
+  })
+}
+
+const confirmText = $computed(() => {
+  if (finance?.billStatus === BillStatus.WAITING_FOR_BILL) {
+    return '提交对账单';
+  }
+  if (finance?.billStatus === BillStatus.WAITING_FOR_CONFIRM) {
+    return '付款';
+  }
+
+  if (finance?.billStatus === BillStatus.HAS_BEEN_CONFIRMED) {
+    return '已付款';
+  }
+})
+
+function dialogConfirm(type: 'submit' | 'rollback') {
+  if (type === 'submit') {
+    dialog.warning({
+      title: '提示',
+      content: `确定要${confirmText}吗？`,
+      positiveText: '确定',
+      onPositiveClick: () => {
+        handleSubmit();
+      }
+    })
+  }
+
+  if (type === 'rollback') {
+    dialog.warning({
+      title: '提示',
+      content: `确定要重新对账吗？`,
+      positiveText: '确定',
+      onPositiveClick: () => {
+        rollBackBill();
+      }
+    })
+  }
+}
+
+// 提交对账单
+function handleSubmit() {
+  const status = finance?.billStatus!;
+  if (status === BillStatus.WAITING_FOR_BILL) {
+    updateFinancialStatementStatus({
+      id: finance?.id!,
+      billStatus: BillStatus.WAITING_FOR_CONFIRM
+    }).then(() => {
+      query();
+    })
+  }
+
+  if (status === BillStatus.WAITING_FOR_CONFIRM) {
+    updateFinancialStatementStatus({
+      id: finance?.id!,
+      billStatus: BillStatus.HAS_BEEN_CONFIRMED
+    }).then(() => {
+      query();
+    })
+  }
+
+  // 一般走不到这里
+  if (status === BillStatus.HAS_BEEN_CONFIRMED) {
+    window.$message.warning('账单已确认，无法再次确认');
+  }
+}
+
+// 重新对账
+function rollBackBill() {
+  updateFinancialStatementStatus({
+    id: finance?.id!,
+    billStatus: BillStatus.WAITING_FOR_BILL
+  }).then(() => {
+    query();
   })
 }
 

@@ -132,3 +132,20 @@ export const delProductPlanFinancialStatementDetail = (data: {
     showMsg: true
   });
 };
+
+/**
+ * 修改账单状态
+ * @param data 账单数据 {
+ *   id: 账单ID
+ *   billStatus: 账单状态 0: 待对账 1: 已对账 2: 已确认
+ * }
+ * @returns
+ */
+export const updateFinancialStatementStatus = (data: { id: number; billStatus: 0 | 1 | 2 }) => {
+  return request({
+    url: '/api/FinancialStatement/UpdateFinancialStatementStatus',
+    method: 'POST',
+    data: data,
+    showMsg: true
+  });
+};

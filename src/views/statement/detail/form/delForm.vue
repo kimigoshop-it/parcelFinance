@@ -1,7 +1,7 @@
 <template>
-  <DialogForm :show-label="false" width="300px" :columns="1" :visible="visible" title="删除账单"
-    :form-items="formItems" v-model="model" @confirm="handleConfirm" @close="closeDialog" @negative-click="closeDialog"
-    negative-text="取消" @positive-click="handleConfirm" />
+  <DialogForm :show-label="false" width="300px" :columns="1" :visible="visible" title="删除账单" :form-items="formItems"
+    v-model="model" @confirm="handleConfirm" @close="closeDialog" @negative-click="closeDialog" negative-text="取消"
+    @positive-click="handleConfirm" />
 </template>
 
 <script setup lang="tsx">
@@ -52,23 +52,32 @@ defineExpose({
 })
 
 
-const formItems = $ref<FormItem[]>([
-  {
-    name: "delType",
-    label: "转入下期账单",
-    component: "Customer",
-    render: () => {
-      return <ElRadioGroup v-model={model.delType} >
-        {!props.isLading && <ElRadio value={1} > 无需对账 </ElRadio>}
-        <ElRadio value={2} > 转入下期账单 </ElRadio>
-      </ElRadioGroup>
-    }
+const formItems = $computed<FormItem[]>(() => {
+  if (model.businessNumber === '' || model.businessNumber === null || model.businessNumber === undefined) {
+    return [];
   }
-]);
+  return [
+    {
+      name: "delType",
+      label: "转入下期账单",
+      component: "Customer",
+      render: () => {
+        return <ElRadioGroup v-model={model.delType} >
+          {!props.isLading && <ElRadio value={1} > 无需对账 </ElRadio>}
+          <ElRadio value={2} > 转入下期账单 </ElRadio>
+        </ElRadioGroup>
+      }
+    }
+  ]
+});
 
 let visible = $ref(false);
 
 const handleConfirm = () => {
+  if (model.businessNumber === '' || model.businessNumber === null || model.businessNumber === undefined) {
+    model.delType = undefined as any;
+  }
+
   delFinancialStatementDetail(model).then(() => {
     emit('success');
     visible = false;
