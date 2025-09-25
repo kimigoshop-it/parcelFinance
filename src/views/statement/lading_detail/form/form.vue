@@ -8,7 +8,7 @@ import { ElInput } from 'element-plus';
 import { onMounted } from 'vue';
 import { FormItem } from '~/src/components/basic-form';
 import DialogForm from '~/src/components/dialog-form';
-import { addPayFinancialStatementDetail, addReceivableFinancialStatementDetail } from '~/src/service';
+import { addPayAndReceivableProductPlanTemuDetail, addPayFinancialStatementDetail, addReceivableFinancialStatementDetail } from '~/src/service';
 import { GoodType, PriceType } from '~/src/typings/business/shared';
 
 const props = defineProps<{
@@ -126,14 +126,14 @@ defineExpose({
   }
 })
 
-const handleSubmit = () => {
-  if (props.billType === PriceType.PAYABLE) {
-    addPayFinancialStatementDetail(model);
-  }
-
-  if (props.billType === PriceType.RECEIVABLE) {
-    addReceivableFinancialStatementDetail(model);
-  }
+const handleSubmit = async () => {
+  await addPayAndReceivableProductPlanTemuDetail({
+    financialStatementDetailId: model.financialStatementDetailId,
+    businessNumberList: model.businessNumberList,
+    goodType: model.goodType,
+    weight: model.weight,
+    amount: model.amount,
+  });
 
   close();
   emit('success');

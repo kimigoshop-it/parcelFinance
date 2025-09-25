@@ -43,9 +43,10 @@
         @update:page-size="query" />
 
       <!-- 表单 -->
-      <Form ref="formRef" :bill-type="billType" :financial-statement-id="id" @success="query" />
+      <Form ref="formRef" :bill-type="billType" :financial-statement-id="id" :is-lading="isLading" @success="query" />
 
-      <DelForm ref="delFormRef" :financial-statement-id="id" @success="query" />
+      <DelForm ref="delFormRef" :financial-statement-id="id" :is-lading="isLading" @success="query"
+        @close="query" />
     </div>
 
     <template #footer>
@@ -97,9 +98,12 @@ let financePage = $ref<BaseQueryParams>({
   total: 0,
 });
 
+let isLading = $computed(() => {
+  return finance?.billNode === '清关' || finance?.billNode === '头程';
+})
+
 const columns = $computed(() => {
   const col = [
-
     {
       title: '账单明细编号',
       key: 'billNumber',
@@ -144,14 +148,18 @@ const columns = $computed(() => {
       key: 'action',
       render: ({ row }: { row: FinancialStatementDetails }) => {
         return <n-button type="primary" size="small" onClick={() => {
-          delFormRef.value?.openDialog(row.goodType!, row.businessNumber!, row.id, finance?.billNode !== '清关');
+          delFormRef.value?.openDialog(row.goodType!, row.businessNumber!, row.id);
         }}>删除</n-button>
       }
     }
   ]
 
-  if ((finance?.billNode ?? '') === '清关') {
+  if (isLading) {
     return col.filter(item => item.key !== 'goodType' && item.key !== 'lastMileService');
+  }
+
+  if (!isLading) {
+    col[0].render = undefined;
   }
 
   return col;

@@ -33,7 +33,7 @@
         :data="ladingBill.details" :table-height="tableHeight" @update:page-index="query" @update:page-size="query" />
 
       <Form ref="formRef" :financial-statement-id="id" :bill-type="1" @success="query" />
-      <DelForm ref="delFormRef" :financial-statement-id="id" @success="query" />
+      <DelForm ref="delFormRef" :financial-statement-detail-id="id" @success="query" />
     </div>
   </ThreeSection>
 </template>
@@ -45,8 +45,6 @@ import Form from './form/form.vue';
 import DelForm from './form/delForm.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
-import { getEnumLabel } from '~/src/typings/business/shared/enum_label_map';
-import { getFinanceTag } from '~/src/typings/business/finance';
 import { TableColumn } from 'naive-ui/es/data-table/src/interface';
 import { queryLadingDetails } from '~/src/service/api/finance';
 
@@ -54,7 +52,6 @@ const route = useRoute();
 const router = useRouter();
 
 const id = Number(route.query.id);
-const orderNumber = route.query.orderNumber as string;
 
 const threeSectionRef = ref<InstanceType<typeof ThreeSection>>();
 const formRef = ref<InstanceType<typeof Form>>();
@@ -88,7 +85,7 @@ const columns = $computed<TableColumn[]>(() => {
       key: 'action',
       render: ({ row }: { row: FinancialStatementDetails }) => {
         return <n-button type="primary" size="small" onClick={() => {
-          delFormRef.value?.openDialog(row.goodType!, row.businessNumber!, row.id);
+          delFormRef.value?.openDialog(row.id);
         }
         }> 删除 </n-button>
       }

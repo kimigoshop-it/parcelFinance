@@ -8,42 +8,33 @@
 import { ElRadio, ElRadioGroup } from 'element-plus';
 import { FormItem } from '~/src/components/basic-form';
 import DialogForm from '~/src/components/dialog-form';
+import { delProductPlanFinancialStatementDetail } from '~/src/service';
 import { GoodType } from '~/src/typings/business/shared';
 
 const props = defineProps<{
-  financialStatementId: number;
+  financialStatementDetailId: number;
 }>();
 
-let showNext = $ref(true);
+const emit = defineEmits<{
+  (e: 'success'): void;
+}>();
+
 
 const model = $ref<
   | {
-    financialStatementId: number;
-    financialStatementDetailId?: number;
-    delType: '1' | '2';
-    goodType: GoodType | undefined;
-    businessNumber: string | undefined;
+    financialStatementDetailId: number;
+    financialStatementProductPlanDetailId: number;
+    delType: 1 | 2;
   }>({
-    financialStatementId: props.financialStatementId,
-    financialStatementDetailId: undefined,
-    delType: '1',
-    goodType: undefined,
-    businessNumber: undefined,
+    financialStatementDetailId: props.financialStatementDetailId,
+    financialStatementProductPlanDetailId: 0,
+    delType: 1,
   })
 
 
-const openDialog = (goodType: GoodType, businessNumber: string, financialStatementDetailId: number, _showNext: boolean = true) => {
-  model.financialStatementDetailId = financialStatementDetailId;
-  model.goodType = goodType;
-  model.businessNumber = businessNumber;
-  showNext = _showNext;
+const openDialog = (financialStatementProductPlanDetailId: number) => {
+  model.financialStatementProductPlanDetailId = financialStatementProductPlanDetailId;
   visible = true;
-
-  console.log(showNext);
-  console.log(goodType);
-  console.log(businessNumber);
-  console.log(financialStatementDetailId);
-  console.log(model);
 }
 
 const closeDialog = () => {
@@ -63,8 +54,8 @@ const formItems = $ref<FormItem[]>([
     component: "Customer",
     render: () => {
       return <ElRadioGroup v-model={model.delType} >
-        {showNext && <ElRadio value="2" > 转入下期账单 </ElRadio>}
-        <ElRadio value="1" > 无需对账 </ElRadio>
+        <ElRadio value={1} > 无需对账 </ElRadio>
+        <ElRadio value={2} > 转入下期账单 </ElRadio>
       </ElRadioGroup>
     }
   }
@@ -72,8 +63,9 @@ const formItems = $ref<FormItem[]>([
 
 let visible = $ref(false);
 
-const handleConfirm = () => {
-  console.log(model);
+const handleConfirm = async () => {
+  await delProductPlanFinancialStatementDetail(model);
+  emit('success');
   visible = false;
 };
 </script>

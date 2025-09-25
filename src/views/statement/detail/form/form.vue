@@ -14,6 +14,7 @@ import { GoodType, PriceType } from '~/src/typings/business/shared';
 const props = defineProps<{
   billType: PriceType;
   financialStatementId: number;
+  isLading: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -75,6 +76,23 @@ const formItems = $computed<FormItem[]>(() => {
         }
       }
     }
+  }
+
+  // 如果是提单直接返回一个提单号输入框
+  if (props.isLading) {
+    return [
+      {
+        label: '提单号',
+        name: 'ladingNumber',
+        component: 'Customer',
+        colSpan: 24,
+        render: () => (<ElInput v-model={model.businessNumberList[0]} onUpdate:modelValue={
+          (value: string) => {
+            model.businessNumberList = [value];
+          }
+        }></ElInput>)
+      }
+    ];
   }
 
   if (props.billType === PriceType.PAYABLE) {
@@ -160,6 +178,10 @@ defineExpose({
 })
 
 const handleSubmit = () => {
+  if (props.isLading) {
+    model.goodType = GoodType.NORMAL;
+  }
+
   if (props.billType === PriceType.PAYABLE) {
     addPayFinancialStatementDetail(model);
   }
