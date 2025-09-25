@@ -45,8 +45,7 @@
       <!-- 表单 -->
       <Form ref="formRef" :bill-type="billType" :financial-statement-id="id" :is-lading="isLading" @success="query" />
 
-      <DelForm ref="delFormRef" :financial-statement-id="id" :is-lading="isLading" @success="query"
-        @close="query" />
+      <DelForm ref="delFormRef" :financial-statement-id="id" :is-lading="isLading" @success="query"/>
     </div>
 
     <template #footer>

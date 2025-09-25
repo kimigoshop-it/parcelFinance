@@ -1,5 +1,5 @@
 <template>
-  <DialogForm :show-label="false" width="300px" :columns="1" v-model:visible="visible" title="删除账单"
+  <DialogForm :show-label="false" width="300px" :columns="1" :visible="visible" title="删除账单"
     :form-items="formItems" v-model="model" @confirm="handleConfirm" @close="closeDialog" @negative-click="closeDialog"
     negative-text="取消" @positive-click="handleConfirm" />
 </template>
@@ -49,7 +49,6 @@ const closeDialog = () => {
 
 defineExpose({
   openDialog,
-  closeDialog,
 })
 
 
