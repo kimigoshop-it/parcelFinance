@@ -13,7 +13,7 @@ import { GoodType, PriceType } from '~/src/typings/business/shared';
 
 const props = defineProps<{
   billType: PriceType;
-  financialStatementId: number;
+  financialStatementDetailId: number;
 }>();
 
 const emit = defineEmits<{
@@ -110,7 +110,7 @@ const formItems = $computed<FormItem[]>(() => {
 });
 
 const model = $ref<Record<string, any>>({
-  financialStatementId: props.financialStatementId,
+  financialStatementDetailId: props.financialStatementDetailId,
   businessNumberList: [],
 });
 

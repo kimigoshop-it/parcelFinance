@@ -33,7 +33,7 @@
         v-model:page-size="ladingPage.pageSize" :sticky-top="33" :total="ladingPage.total" :columns="columns"
         :data="ladingBill.details" :table-height="tableHeight" @update:page-index="query" @update:page-size="query" />
 
-      <Form ref="formRef" :financial-statement-id="id" :bill-type="1" @success="query" />
+      <Form ref="formRef" :financial-statement-detail-id="id" :bill-type="1" @success="query" />
       <DelForm ref="delFormRef" :financial-statement-detail-id="id" @success="query" />
     </div>
   </ThreeSection>
