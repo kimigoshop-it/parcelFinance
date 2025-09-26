@@ -207,5 +207,41 @@ export default [
         }
       }
     ]
+  },
+  {
+    name: 'returnshipment',
+    path: '/returnshipment',
+    component: 'basic',
+    meta: {
+      title: '退运',
+      localIcon: 'circum_crop',
+      order: 1
+    },
+    children: [
+      {
+        name: 'returnshipment_returnshipmentorder',
+        path: '/returnshipment/returnshipmentorder',
+        component: 'self',
+        meta: {
+          title: '退运订单',
+          localIcon: 'dot',
+          requiresAuth: true,
+          hide: false,
+          keepAlive: false
+        }
+      },
+      {
+        name: 'returnshipment_returnshipmentorder_detail',
+        path: '/returnshipment/returnshipmentorder/detail',
+        component: 'self',
+        meta: {
+          title: '退运订单详情',
+          localIcon: 'dot',
+          requiresAuth: true,
+          hide: true,
+          keepAlive: false
+        }
+      }
+    ]
   }
 ];
