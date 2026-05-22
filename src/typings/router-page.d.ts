@@ -11,6 +11,9 @@ declare namespace RouterPage {
     | '404'
     | '500'
     | 'appH5'
+    | 'combinedorder'
+    | 'combinedorder_detail'
+    | 'combinedorder_orderforgoods'
     | 'constant-page'
     | 'home'
     | 'home_LadingBillhome'
@@ -46,5 +49,5 @@ declare namespace RouterPage {
     | 'statement_lading_detail';
 
   /** 最后一级路由(该级路有对应的vue文件) */
-  type LastDegreeRouteKey = Extract<RouteKey, '403' | '404' | '500' | 'appH5' | 'constant-page' | 'home_LadingBillhome' | 'home_edit' | 'home_message' | 'login' | 'not-found' | 'orderforgoods_detail' | 'orderforgoods_orderforgoods' | 'payable_statement_list' | 'quotation_payable' | 'quotation_price_config' | 'quotation_receivable' | 'receivable_statement_list' | 'returnshipment_returnshipmentorder' | 'returnshipment_returnshipmentorder_detail' | 'settings_export' | 'settlement_settlement_area' | 'statement_detail' | 'statement_lading_detail'>
+  type LastDegreeRouteKey = Extract<RouteKey, '403' | '404' | '500' | 'appH5' | 'combinedorder_detail' | 'combinedorder_orderforgoods' | 'constant-page' | 'home_LadingBillhome' | 'home_edit' | 'home_message' | 'login' | 'not-found' | 'orderforgoods_detail' | 'orderforgoods_orderforgoods' | 'payable_statement_list' | 'quotation_payable' | 'quotation_price_config' | 'quotation_receivable' | 'receivable_statement_list' | 'returnshipment_returnshipmentorder' | 'returnshipment_returnshipmentorder_detail' | 'settings_export' | 'settlement_settlement_area' | 'statement_detail' | 'statement_lading_detail'>
 }

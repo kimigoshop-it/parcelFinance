@@ -3,6 +3,68 @@ import { ElLoading } from "element-plus";
 import { mockRequest } from "@/service/request";
 
 export default class Utils {
+
+	//无下载动作
+	static exportsWithoutDownload = (url, params = {}) => {
+		const pageloading = ElLoading.service({
+			lock: true,
+			text: "导出中。。。",
+			spinner: "el-icon-loading",
+			background: "rgba(0, 0, 0, 0.7)"
+		});
+		console.log(params);
+		mockRequest({
+			url,
+			method: "post",
+			data: params,
+			responseType: "blob"
+		})
+			.then((res) => {
+				const blob = new Blob([res.data], { type: res.data.type });
+				const reader = new FileReader();
+
+				// 读取 Blob 数据为文本
+				reader.onload = () => {
+					try {
+						const result = JSON.parse(reader.result as string);
+						if (result.code === 200) {
+							window.$notification?.success({
+								title: "导出成功",
+								content: "请前往导出记录看板中查看",
+								duration: 3000
+							});
+						} else {
+							window.$notification?.error({
+								title: "导出失败",
+								content: result.message || "未知错误",
+								duration: 3000
+							});
+						}
+					} catch (error) {
+						console.error("解析导出结果失败", error);
+						window.$notification?.error({
+							title: "导出失败",
+							content: "解析导出结果失败",
+							duration: 3000
+						});
+					}
+				};
+
+				reader.readAsText(blob); // 将 Blob 数据读取为文本
+				pageloading.close();
+			})
+			.catch((err) => {
+				console.error("导出请求失败", err);
+				window.$notification?.error({
+					title: "导出失败",
+					content: "导出请求失败，请稍后重试",
+					duration: 3000
+				});
+				pageloading.close();
+			});
+	};
+
+
 	// 导出
 	static exports = (url, params = {}, name) => {
 		const pageloading = ElLoading.service({

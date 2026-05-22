@@ -261,3 +261,22 @@ export function QueryCustomerOrderDetail(data: any) {
 		params: data,
 	});
 }
+
+/**
+ * 查询客户订单
+ */
+export function queryCustomerCombinedOrderList(data: any) {
+	return mockRequest({
+		url: "/api/Financial/QueryCustomerCombinedOrderList",
+		method: "post",
+		data,
+	});
+}
+
+export function QueryCustomerBaseInfoList(data: any) {
+	return mockRequest({
+		url: "/api/CustomerBasicInfo/QueryCustomerBaseInfoList",
+		method: "post",
+		data
+	});
+}

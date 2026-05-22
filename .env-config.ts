@@ -6,9 +6,9 @@ const serviceEnv: ServiceEnv = {
 	dev: {
 		// url: 'http://10.100.20.97:5072/',
 		// url: 'http://106.14.254.197:8081/',
-		url: "https://admapi.qa.kimigoshop.com/",
+		//url: "https://admapi.qa.kimigoshop.com/",
 		// url: "http://10.100.20.158:5181/",
-		// url: 'http://10.100.20.68:5181/',
+		url: 'http://192.168.110.91:8080/',
 		urlPattern: "/url-pattern",
 		secondUrl: "http://106.14.254.197:8081/",
 		secondUrlPattern: "/second-url-pattern",

@@ -83,6 +83,30 @@ export default [
       }
     ]
   },
+	{
+		name: 'combinedorder',
+		path: '/combinedorder',
+		component: 'basic',
+		meta: {
+			title: '合包单管理',
+			localIcon: 'circum_crop',
+			order: 1
+		},
+		children: [
+			{
+				name: 'combinedorder_orderforgoods',
+				path: '/combinedorder/orderforgoods',
+				component: 'self',
+				meta: {
+					title: '合包单订单',
+					localIcon: 'dot',
+					requiresAuth: true,
+					hide: false,
+					keepAlive: true
+				}
+			}
+		]
+	},
   {
     name: 'quotation',
     path: '/quotation',
