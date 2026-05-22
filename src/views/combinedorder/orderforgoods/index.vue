@@ -144,6 +144,11 @@ const tableColums = reactive({
 		},
 		{
 			minWidth: '180',
+			prop: 'realityCrossVolume',
+			label: '体积重量（Kg）'
+		},
+		{
+			minWidth: '180',
 			prop: 'customsStatus',
 			label: '订单状态',
 			slot: 'customsStatus'
@@ -175,43 +180,8 @@ const tableColums = reactive({
 		},
 		{
 			minWidth: '180',
-			prop: 'realityCrossVolume',
-			label: '体积重量（Kg）'
-		},
-		{
-			minWidth: '180',
 			prop: 'createTime',
 			label: '下单时间'
-		},
-		{
-			minWidth: '180',
-			prop: 'recipientName',
-			label: '收件人姓名'
-		},
-		{
-			minWidth: '180',
-			prop: 'recipientCity',
-			label: '收件人城市'
-		},
-		{
-			minWidth: '180',
-			prop: 'recipietnMobile',
-			label: '收件人电话'
-		},
-		{
-			minWidth: '180',
-			prop: 'recipietnPostCode',
-			label: '收件人邮编'
-		},
-		{
-			minWidth: '180',
-			prop: 'recipetenNation',
-			label: '收件人国家'
-		},
-		{
-			minWidth: '180',
-			prop: 'recipetenAddressFirst',
-			label: '收件人地址'
 		}
 	],
 	data: [] as any
