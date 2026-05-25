@@ -46,7 +46,7 @@ const handleClose = () => {
 const formItems = $ref([
   {
     label: "国家编码",
-    name: "CountryConfigId",
+    name: "countryConfigId",
     component: "Select",
     attrs: {
       options: [] as {
@@ -57,7 +57,7 @@ const formItems = $ref([
   },
   {
     label: "区域名称",
-    name: "PartitionName",
+    name: "partitionName",
     component: "Input",
   }
 ])

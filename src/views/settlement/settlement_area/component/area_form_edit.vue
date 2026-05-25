@@ -240,6 +240,7 @@ const initPartition = () => {
   partition = new Partition(props.partition);
   if (partitionId) {
     queryPartitionDetailById(partitionId).then((res) => {
+			console.log(res);
       if (res.partitionType === PartitionType.PROVINCE) {
         partition.partitionProvincesBackend = (res.provinceViewModelList ?? []).map((item) => {
           const province = country!.getProvince(item.provinceId)
