@@ -1,7 +1,7 @@
 <template>
   <div class="h-full flex flex-col">
     <n-card class="shadow-sm rounded-16px" style="margin-bottom: 12px;">
-      <SearchArea :formItems="formItems" v-model="filter" />
+      <SearchArea :formItems="formItems" v-model="filter" @search="handleSearch" @reset="handleReset" />
     </n-card>
 
     <n-card class="shadow-sm rounded-16px flex-1">
@@ -11,10 +11,11 @@
       <el-table :data="data" border style="width: 100%">
         <el-table-column v-if="false" prop="id" label="ID" width="180" />
         <el-table-column prop="countryCode" label="国家编码" />
-        <el-table-column prop="code" label="区域编码" />
+        <el-table-column prop="partitionCode" label="区域编码" />
         <el-table-column prop="partitionName" label="区域名称" />
+				<el-table-column prop="customerBasicInfoNames" label="适用项目" />
         <el-table-column prop="createTime" sortable label="创建时间" />
-        <el-table-column prop="amount2" sortable label="操作">
+        <el-table-column prop="amount2"  label="操作">
           <template #default="scope">
             <n-button text color="#0256ff" @click="handleEdit(scope.row)">编辑</n-button>
           </template>
@@ -36,6 +37,7 @@ import SearchArea from '@/components/search-area/index.vue';
 import { queryPartitionList } from '~/src/service/api/partition';
 import { onMounted } from 'vue';
 import { ElTable, ElTableColumn } from 'element-plus';
+import { QueryCustomerBaseInfoList } from '@/service';
 
 const props = {
   value: 'id',
@@ -50,21 +52,23 @@ const refresh = (filter: PartitionFilter) => {
   });
 }
 
-const formItems = $ref<FormItem[]>([
+const customerOptions = $ref<{ label: string; value: number }[]>([]);
+
+const formItems = $computed<FormItem[]>(() => [
   {
     label: '国家编码',
-    name: 'CountryCode',
+    name: 'countryCode',
     component: 'Input',
   },
   {
     label: '区域名称',
-    name: 'PartitionName',
+    name: 'partitionName',
     component: 'Input',
   }
 ]);
 
 
-const filter = $ref<PartitionFilter>({
+let filter = $ref<PartitionFilter>({
 });
 
 let data = $ref<IPartition[]>([]);
@@ -93,6 +97,15 @@ let showForm = $ref({
   edit: false,
 });
 
+const handleSearch = () => {
+  refresh(filter);
+}
+
+const handleReset = () => {
+  filter = {};
+  refresh(filter);
+}
+
 const handleSuccess = (action: 'add' | 'edit') => {
   refresh(filter);
   showForm[action] = false;
@@ -100,6 +113,16 @@ const handleSuccess = (action: 'add' | 'edit') => {
 
 onMounted(() => {
   refresh(filter);
+  QueryCustomerBaseInfoList({}).then((res: any) => {
+    let list = Array.isArray(res) ? res : (res?.data || []);
+    if (!Array.isArray(list) && list?.data) {
+      list = list.data;
+    }
+    customerOptions.push(...list.map((item: any) => ({
+      label: item.customerName,
+      value: item.id
+    })));
+  });
 });
 
 

@@ -101,4 +101,11 @@ interface PriceRelatePartition {
    * 超过首重之后，每克的价格（元）
    */
   secondWeightPrice: number;
+
+  /**
+   * 重量类型 0:首重 1:续重
+   */
+  weightType?: 0 | 1;
+
+	billingMethod?: 0 | 1;
 }

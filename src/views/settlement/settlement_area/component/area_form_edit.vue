@@ -7,9 +7,9 @@
 import DialogForm from '@/components/dialog-form';
 import { FormItem } from '@/components/basic-form';
 import { onMounted, render, watch } from 'vue';
-import { ElButton, ElCheckbox, ElIcon, ElOption, ElPagination, ElSelect } from 'element-plus';
+import { ElButton, ElCheckbox, ElIcon, ElInput, ElOption, ElPagination, ElSelect } from 'element-plus';
 import { Minus, Plus } from "@element-plus/icons-vue"
-import { queryPartitionDetailById, queryPartitionNoProvince, queryPartitionNoCity, queryProvinceConfigList, updatePartition } from '@/service/api/partition';
+import { queryPartitionDetailById, queryPartitionNoProvince, queryPartitionNoCity, queryProvinceConfigList, updatePartition, findCustomerBasicInfoByCountryId } from '@/service/api/partition';
 import { CountryConfig, Partition, PartitionType } from '../model';
 import BusinessStore from '@/store/modules/business';
 import { VirtList } from 'vue-virt-list'
@@ -23,6 +23,8 @@ const emit = defineEmits<{
   (e: 'close'): void;
   (e: 'success'): void;
 }>();
+
+const customerOptions = $ref<{ label: string; value: number }[]>([]);
 
 const countryStore = BusinessStore().country;
 
@@ -38,7 +40,10 @@ const formItems = $computed<FormItem[]>(() => {
   const partitionName = {
     label: '区域名称',
     name: 'partitionName',
-    component: 'Input',
+    //component: 'Input',
+		component: 'Customer',
+		render:()=><ElInput v-model={partition.partitionName}></ElInput>,
+		//render:()=><el-input v-model:value={partition.partitionName}></el-input>,
     rules: [
       {
         required: true,
@@ -47,6 +52,28 @@ const formItems = $computed<FormItem[]>(() => {
       }
     ]
   }
+
+	const customerId = {
+    label: '适用项目',
+    name: 'customerId',
+		component: 'Customer',
+    // component: 'Select',
+    // attrs: {
+    //   multiple: true,
+    //   options: customerOptions
+    // },
+		render: ()=>
+			 <n-select v-model:value={partition.customerId} multiple options={customerOptions} />
+		,
+    rules: [
+      {
+        required: true,
+        message: '请选择适用项目',
+        trigger: 'blur'
+      }
+    ]
+  }
+
 
   const partitionType = {
     label: '区划维度',
@@ -212,6 +239,7 @@ const formItems = $computed<FormItem[]>(() => {
   }
 
   items.push(partitionName);
+  items.push(customerId as any);
   items.push(partitionType);
 
   if (partition.partitionType === PartitionType.PROVINCE) {
@@ -229,6 +257,8 @@ const formItems = $computed<FormItem[]>(() => {
 
 // 提交表单
 function handleEditPartition() {
+	console.log("cccccc")
+	console.log(partition.partitionName)
   const model = partition.toUpdatePartitionDtoModel();
   updatePartition(model).then(() => {
     emit('success');
@@ -238,8 +268,11 @@ function handleEditPartition() {
 const initPartition = () => {
   const partitionId = props.partition.id;
   partition = new Partition(props.partition);
+	console.log("aaaaaaaa")
+	console.log(partition)
   if (partitionId) {
     queryPartitionDetailById(partitionId).then((res) => {
+			console.log("bbbbbb")
 			console.log(res);
       if (res.partitionType === PartitionType.PROVINCE) {
         partition.partitionProvincesBackend = (res.provinceViewModelList ?? []).map((item) => {
@@ -266,12 +299,27 @@ const initPartition = () => {
         }).flat();
       }
 
+			partition.customerId = res.customerBasicInfoIds
+       ? res.customerBasicInfoIds.split(',').map(Number)
+      : [];
+			console.log(partition.customerId)
+
       partition.choosePartitionType(res.partitionType);
+
     })
   }
 }
 
 onMounted(() => {
+  findCustomerBasicInfoByCountryId(props.country.id).then((res: any) => {
+    if (res && res.data) {
+      customerOptions.push(...res.data.map((item: any) => ({
+        label: item.customerName,
+        value: item.id
+      })));
+    }
+  });
+
   if (!country) {
     country = new CountryConfig(props.country);
     countryStore.setCountry(country);

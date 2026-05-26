@@ -1,7 +1,7 @@
 interface PartitionFilter {
   countryName?: string;
-  PartitionName?: string;
-  CountryCode?: string;
+  partitionName?: string;
+  countryCode?: string;
 }
 
 declare type PartitionType = number

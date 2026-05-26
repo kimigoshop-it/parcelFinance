@@ -63,6 +63,9 @@ export class Partition implements IPartition {
   /** 区划维度 （0：省州，1：城市） */
   partitionType?: PartitionType;
 
+  /** 适用项目 */
+  customerId?: number[] = [];
+
   /** 创建时间 */
   createTime: Date;
 
@@ -379,12 +382,13 @@ export class Partition implements IPartition {
     if (this.partitionType === PartitionType.CITY) {
       ids = this.partitionCities.filter((c) => c?.cityId).map((c) => c.cityId!);
     }
-
     return {
       id: this.id,
       partitionType: this.partitionType!,
-      updatePartitionProviceIdList: ids
-    };
+      updatePartitionProviceIdList: ids,
+      partitionName: this.partitionName,
+      customerId: this.customerId
+    } as any;
   }
 }
 
@@ -392,6 +396,7 @@ export type PartitionDetail = {
   id: number;
   countryConfigId: number;
   partitionType: PartitionType;
+  customerBasicInfoIds: string;
   provinceViewModelList: {
     provinceId: number;
     partitionCities: {
@@ -411,6 +416,9 @@ export type UpdatePartitionDtoModel = {
    * 分区纬度
    */
   partitionType: PartitionType;
+
+	/** 分区名称 */
+	partitionName: string;
 
   /**
    * 更新分区省州id列表

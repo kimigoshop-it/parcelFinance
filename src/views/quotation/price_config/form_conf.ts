@@ -95,6 +95,11 @@ export default {
       label: '区域重量区间单价*重量',
       value: BillingMethod.AREA_WEIGHT_INTERVAL_PRICE_WEIGHT
     }
+		,
+    {
+      label: '区域重量区间首续重模式',
+      value: BillingMethod.AREA_WEIGHT_INTERVAL_FIRST_AND_FOREMOST
+    }
   ],
   priceTypeOptions: [
     {

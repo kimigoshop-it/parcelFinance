@@ -48,7 +48,7 @@ const handleExpand = () => {
 };
 
 const handleSearch = () => {
-  emit('search', model);
+  emit('search', model.value);
 };
 
 const handleReset = () => {

@@ -8,7 +8,7 @@ import { GoodType } from '~/src/typings/business/shared';
  */
 export const queryFinancialStatement = (data: any) => {
   return request<FinancialStatement[]>({
-    url: '/api/FinancialStatement/QueryFinancialStatement',
+    url: '/FinancialStatement/QueryFinancialStatement',
     method: 'POST',
     data: data
   });
@@ -21,7 +21,7 @@ export const queryFinancialStatement = (data: any) => {
  */
 export const queryFinancialStatementDetails = (id: number, filters: BaseQueryParams) => {
   return requestRaw<FinancialStatementView>({
-    url: '/api/FinancialStatement/QueryFinancialStatementDetails',
+    url: '/FinancialStatement/QueryFinancialStatementDetails',
     method: 'POST',
     data: {
       id,
@@ -37,7 +37,7 @@ export const queryFinancialStatementDetails = (id: number, filters: BaseQueryPar
  */
 export const addReceivableFinancialStatementDetail = (data: any) => {
   return request({
-    url: '/api/FinancialStatement/AddReceivableFinancialStatementDetail',
+    url: '/FinancialStatement/AddReceivableFinancialStatementDetail',
     method: 'POST',
     data: data,
     showMsg: true
@@ -51,7 +51,7 @@ export const addReceivableFinancialStatementDetail = (data: any) => {
  */
 export const addPayFinancialStatementDetail = (data: any) => {
   return request({
-    url: '/api/FinancialStatement/AddPayFinancialStatementDetail',
+    url: '/FinancialStatement/AddPayFinancialStatementDetail',
     method: 'POST',
     data: data,
     showMsg: true
@@ -71,7 +71,7 @@ export const delFinancialStatementDetail = (data: {
   businessNumber: string;
 }) => {
   return request({
-    url: '/api/FinancialStatement/DelFinancialStatementDetail',
+    url: '/FinancialStatement/DelFinancialStatementDetail',
     method: 'POST',
     data: data,
     showMsg: true
@@ -88,7 +88,7 @@ export const queryLadingDetails = (
   } & BaseQueryParams
 ) => {
   return requestRaw<LadingDetailsView>({
-    url: '/api/FinancialStatement/QueryFinancialProductPlanTemuDetailByProductPlanTemuNumber',
+    url: '/FinancialStatement/QueryFinancialProductPlanTemuDetailByProductPlanTemuNumber',
     method: 'POST',
     data: data,
     showMsg: true
@@ -108,7 +108,7 @@ export const addPayAndReceivableProductPlanTemuDetail = (data: {
   amount?: number;
 }) => {
   return request({
-    url: '/api/FinancialStatement/AddPayAndReceivableProductPlanTemuDetail',
+    url: '/FinancialStatement/AddPayAndReceivableProductPlanTemuDetail',
     method: 'POST',
     data: data,
     showMsg: true
@@ -126,7 +126,7 @@ export const delProductPlanFinancialStatementDetail = (data: {
   delType: 1 | 2;
 }) => {
   return request({
-    url: '/api/FinancialStatement/DelProductPlanFinancialStatementDetail',
+    url: '/FinancialStatement/DelProductPlanFinancialStatementDetail',
     method: 'POST',
     data: data,
     showMsg: true
@@ -143,7 +143,7 @@ export const delProductPlanFinancialStatementDetail = (data: {
  */
 export const updateFinancialStatementStatus = (data: { id: number; billStatus: 0 | 1 | 2 }) => {
   return request({
-    url: '/api/FinancialStatement/UpdateFinancialStatementStatus',
+    url: '/FinancialStatement/UpdateFinancialStatementStatus',
     method: 'POST',
     data: data,
     showMsg: true

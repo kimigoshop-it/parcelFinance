@@ -12,7 +12,9 @@ export enum BillingMethod {
   /** 区域重量区间固定价 */
   AREA_WEIGHT_INTERVAL_FIXED_PRICE = 5,
   /** 区域重量区间单价*重量 */
-  AREA_WEIGHT_INTERVAL_PRICE_WEIGHT = 6
+  AREA_WEIGHT_INTERVAL_PRICE_WEIGHT = 6,
+	  /**区域重量区间首续重模式*/
+  AREA_WEIGHT_INTERVAL_FIRST_AND_FOREMOST = 7
 }
 export class PartitionWeightPrice {
   partitionId: number;
@@ -66,7 +68,8 @@ export class PartitionWeightPrice {
       beginWeight: wp.beginWeight,
       endWeight: wp.endWeight,
       firstWeightPrice: wp.firstWeightPrice,
-      secondWeightPrice: wp.secondWeightPrice
+      secondWeightPrice: wp.secondWeightPrice,
+      weightType: wp.weightType
     }));
   }
 }
@@ -79,7 +82,8 @@ const priceEnumLabelMap = {
     [BillingMethod.AREA_INTERVAL_FIXED_PRICE]: '区域区间固定价',
     [BillingMethod.AREA_INTERVAL_PRICE_WEIGHT]: '区域区间单价*重量',
     [BillingMethod.AREA_WEIGHT_INTERVAL_FIXED_PRICE]: '区域重量区间固定价',
-    [BillingMethod.AREA_WEIGHT_INTERVAL_PRICE_WEIGHT]: '区域重量区间单价*重量'
+    [BillingMethod.AREA_WEIGHT_INTERVAL_PRICE_WEIGHT]: '区域重量区间单价*重量',
+		[BillingMethod.AREA_WEIGHT_INTERVAL_FIRST_AND_FOREMOST]: '区域重量区间首续重模式*重量'
   }
 };
 

@@ -126,3 +126,15 @@ export const queryPartitionNoCity = (countryConfigId: number) => {
     });
   });
 };
+
+/**
+ * 根据国家Id查询关联客户信息
+ * @param countryId 国家Id
+ */
+export const findCustomerBasicInfoByCountryId = (countryId: number) => {
+  return requestRaw<PartitionDetail>({
+    url: '/api/CustomerBasicInfo/findCustomerBasicInfoByCountryId',
+    method: 'GET',
+    params: { countryId }
+  });
+};

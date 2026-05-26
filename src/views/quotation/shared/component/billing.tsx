@@ -4,6 +4,7 @@ import FixedPrice from './fixed_price';
 import WeightIntervalPrice from './weight_interval_price';
 import AreaIntervalPrice from './area_interval_price';
 import AreaWeightIntervalPriceWeight from './area_weight_interval_price_weight';
+import AreaWeightIntervalFirstAndForemost from './area_weight_interval_first_and_foremost';
 
 function isFixedPrice(billingMethod: BillingMethod) {
   return [
@@ -53,7 +54,8 @@ export default defineComponent({
       [BillingMethod.AREA_INTERVAL_PRICE_WEIGHT]: AreaIntervalPrice,
       [BillingMethod.AREA_INTERVAL_FIXED_PRICE]: AreaIntervalPrice,
       [BillingMethod.AREA_WEIGHT_INTERVAL_FIXED_PRICE]: AreaWeightIntervalPriceWeight,
-      [BillingMethod.AREA_WEIGHT_INTERVAL_PRICE_WEIGHT]: AreaWeightIntervalPriceWeight
+      [BillingMethod.AREA_WEIGHT_INTERVAL_PRICE_WEIGHT]: AreaWeightIntervalPriceWeight,
+			[BillingMethod.AREA_WEIGHT_INTERVAL_FIRST_AND_FOREMOST]: AreaWeightIntervalFirstAndForemost
     };
 
     const compRef = ref<{ validate: () => Promise<boolean> }>();
