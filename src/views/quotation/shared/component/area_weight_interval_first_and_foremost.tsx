@@ -251,7 +251,7 @@ export default defineComponent({
                     {row.weightPrice.map((wp, idx) => (
                       <NFormItem>
                         <NSelect
-                          v-model:value={wp.billingMethod}
+                          v-model:value={wp.billingType}
                           class='w-full'
                           options={[
                             { label: '固定价', value: 0 },

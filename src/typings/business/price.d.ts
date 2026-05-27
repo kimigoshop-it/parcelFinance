@@ -107,5 +107,5 @@ interface PriceRelatePartition {
    */
   weightType?: 0 | 1;
 
-	billingMethod?: 0 | 1;
+	billingType?: 0 | 1;
 }
