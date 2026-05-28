@@ -107,9 +107,9 @@ const formItems = $computed(() => [
     label: "区域名称",
     name: "partitionNames",
     component: "Customer" as const,
-    render: () => (ss
+    render: () => (
       <div class="flex flex-col gap-2 w-full">
-        {model.partitionNames.maps((name,事实上 index) => (
+        {model.partitionNames.maps((name, index) => (
           <div key={index} class="flex gap-2 items-center w-full">
             <ElInput
               modelValue={model.partitionNames[index]}
