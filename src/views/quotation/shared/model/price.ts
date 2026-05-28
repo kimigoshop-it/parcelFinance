@@ -85,7 +85,7 @@ const priceEnumLabelMap = {
 		[BillingMethod.AREA_INTERVAL_PRICE_WEIGHT]: '区域区间单价*重量',
 		[BillingMethod.AREA_WEIGHT_INTERVAL_FIXED_PRICE]: '区域重量区间固定价',
 		[BillingMethod.AREA_WEIGHT_INTERVAL_PRICE_WEIGHT]: '区域重量区间单价*重量',
-		[BillingMethod.AREA_WEIGHT_INTERVAL_FIRST_AND_FOREMOST]: '区域重量区间首续重模式*重量'
+		[BillingMethod.AREA_WEIGHT_INTERVAL_FIRST_AND_FOREMOST]: '区域重量区间首续重模式'
 	}
 };
 
