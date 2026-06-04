@@ -17,7 +17,13 @@ export enum BusinessNode {
   /** 专线 */
   SPEC_LINE = 4,
   /** 清派一体 */
-  CLEAN_DELIVERY = 5
+  CLEAN_DELIVERY = 5,
+  /** 国内仓 */
+  DOMESTIC_WAREHOUSE = 6,
+  /** 干线+清关 */
+  TRUNK_CUSTOMS = 7,
+  /** 干线+灰关 */
+  TRUNK_GRAY_CUSTOMS = 8
 }
 
 export enum GoodType {

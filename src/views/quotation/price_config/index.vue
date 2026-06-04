@@ -68,6 +68,9 @@ const router = useRouter();
 const quotationId = $ref<number | undefined>(route.query.id ?? undefined as any);
 // 报价类型
 const priceType = $ref<PriceType>(Number(route.query.priceType)! as any);
+
+// 将 route query 挂载到 window 上，供 form_conf 读取
+(window as any).routeQuery = route.query;
 // 操作类型
 const action: 'edit' | 'add' = route.query.action as 'edit' | 'add';
 const actionText = $computed(() => {

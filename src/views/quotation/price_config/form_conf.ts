@@ -12,32 +12,46 @@ export default {
       value: BusinessType.SPLIT
     }
   ],
-  businessNodeOptions: [
-    {
-      label: '头程',
-      value: BusinessNode.HEAD
-    },
-    {
-      label: '清关',
-      value: BusinessNode.CUSTOMS_CLEARANCE
-    },
-    {
-      label: '尾程',
-      value: BusinessNode.LAST_MILE
-    },
-    {
-      label: '逆向',
-      value: BusinessNode.REVERSE
-    },
-    {
-      label: '专线',
-      value: BusinessNode.SPEC_LINE
-    },
-    {
-      label: '清派一体',
-      value: BusinessNode.CLEAN_DELIVERY
-    }
-  ],
+  get businessNodeOptions() {
+    return [
+      {
+        label: '头程',
+        value: BusinessNode.HEAD
+      },
+      {
+        label: '清关',
+        value: BusinessNode.CUSTOMS_CLEARANCE
+      },
+      {
+        label: '尾程',
+        value: BusinessNode.LAST_MILE
+      },
+      {
+        label: '逆向',
+        value: BusinessNode.REVERSE
+      },
+      {
+        label: '专线',
+        value: BusinessNode.SPEC_LINE
+      },
+      {
+        label: '清派一体',
+        value: BusinessNode.CLEAN_DELIVERY
+      },
+      {
+        label: '国内仓',
+        value: BusinessNode.DOMESTIC_WAREHOUSE
+      },
+      {
+        label: '干线+清关',
+        value: BusinessNode.TRUNK_CUSTOMS
+      },
+      {
+        label: '干线+灰关',
+        value: BusinessNode.TRUNK_GRAY_CUSTOMS
+      }
+    ];
+  },
   goodTypeOptions: [
     {
       label: '普货',

@@ -11,7 +11,10 @@ const priceEnumLabelMap = {
     [BusinessNode.LAST_MILE]: '尾程',
     [BusinessNode.REVERSE]: '逆向',
     [BusinessNode.SPEC_LINE]: '专线',
-    [BusinessNode.CLEAN_DELIVERY]: '清派一体'
+    [BusinessNode.CLEAN_DELIVERY]: '清派一体',
+    [BusinessNode.DOMESTIC_WAREHOUSE]: '国内仓',
+    [BusinessNode.TRUNK_CUSTOMS]: '干线+清关',
+    [BusinessNode.TRUNK_GRAY_CUSTOMS]: '干线+灰关'
   },
   priceType: {
     [PriceType.PAYABLE]: '应付',

@@ -54,39 +54,7 @@ export default defineComponent({
     const weightFormItemRef = ref<InstanceType<typeof NForm>[][][]>([]);
     const priceFormItemRef = ref<InstanceType<typeof NForm>[][]>([]);
 
-    const conflicts = ref<Map<number, [number, number][]>>(new Map());
-
-    function validatePartitions() {
-      conflicts.value.clear();
-      model.forEach((item, idx) => {
-        const ranges = item.weightPrice.map((item) => [item.beginWeight, item.endWeight]);
-        for (let i = 0; i < ranges.length; i++) {
-          const [start1, end1] = ranges[i];
-          for (let j = i + 1; j < ranges.length; j++) {
-            const [start2, end2] = ranges[j];
-            // 判断是否有交集
-            if (start1 < end2 && end1 > start2) {
-              if (!conflicts.value.has(idx)) {
-                conflicts.value.set(idx, []);
-              }
-              conflicts.value.get(idx)?.push([i, j]);
-            }
-          }
-        }
-      });
-    }
-
-    // 判断是否有区间冲突
-    const hasRangeConflicts = (rowIdx: number, weightIdx: number) => {
-      return conflicts.value.get(rowIdx)?.some(([i, j]) => i === weightIdx || j === weightIdx);
-    };
-
     const validate = () => {
-      validatePartitions();
-      if (conflicts.value.size > 0) {
-        return Promise.reject('区间和其它区间存在交集');
-      }
-
       const tasks = [
         ...partitionFormItemRef.value
           .filter((item) => item !== undefined && item !== null)
@@ -210,9 +178,7 @@ export default defineComponent({
                           }}
                         </NButton>
                       )}
-                      {hasRangeConflicts(rowIndex, idx) && (
-                        <span class='pl-2 text-red-500'>该区间不能位于已有区间内</span>
-                      )}
+
                     </NSpace>
                   ))}
                 </div>
