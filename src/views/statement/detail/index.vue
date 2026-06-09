@@ -24,7 +24,7 @@
                 finance?.billStatus!) }}</div>
             </n-space>
           </div>
-          <div>账单编号: {{ finance?.bilNumber }}</div>
+          <div>账单编号: {{ finance?.billNumber }}</div>
           <div>账单时间: {{ dayjs(finance?.billTime).format('YYYY-MM-DD HH:mm:ss') }}</div>
           <div>总数: {{ financePage?.total }}</div>
           <div>总金额: {{ finance?.billAmount }}</div>
@@ -107,7 +107,11 @@ let financePage = $ref<BaseQueryParams>({
 });
 
 let isLading = $computed(() => {
-  return finance?.billNode === '清关' || finance?.billNode === '头程';
+  return finance?.billNode === '清关'
+	|| finance?.billNode === '头程'
+	|| finance?.billNode === '国内仓'
+	|| finance?.billNode === '干线+灰关'
+	|| finance?.billNode === '干线+白关';
 })
 
 const columns = $computed(() => {

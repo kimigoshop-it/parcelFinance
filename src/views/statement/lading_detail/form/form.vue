@@ -54,7 +54,7 @@ const formItems = $computed<FormItem[]>(() => {
 
   const enCode: FormItem =
   {
-    label: 'EN单号',
+    label: '尾程单号',
     name: 'businessNumberList',
     component: 'Customer',
     colSpan: 24,

@@ -67,8 +67,8 @@ const tableHeight = $computed(() => {
 const columns = $computed<TableColumn[]>(() => {
   const col = [
     {
-      title: '账单编号',
-      key: 'billNumber',
+      title: '尾程单号',
+      key: 'kyInStorageNumber',
       width: '260px',
     },
     {

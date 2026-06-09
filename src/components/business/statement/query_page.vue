@@ -64,7 +64,7 @@ const searchAreaItems = $ref<FormItem[]>([
 
 const columns = $ref<TableColumn<FinancialStatement>[]>([
   {
-    key: 'bilNumber',
+    key: 'billNumber',
     title: '账单编号',
     width: 200,
   },

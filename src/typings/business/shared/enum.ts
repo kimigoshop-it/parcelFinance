@@ -28,13 +28,13 @@ export enum BusinessNode {
 
 export enum GoodType {
   /** 普货 */
-  NORMAL = 1,
+  NORMAL = 0,
   /** HV */
-  HV = 2,
+  HV = 1,
   /** 快递 */
-  EXPRESS = 3,
+  EXPRESS = 2,
   /** NonH7 */
-  NON_H7 = 4,
+  NON_H7 = 3,
   /** 其他 */
   OTHER = 100
 }
